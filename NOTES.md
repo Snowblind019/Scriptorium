@@ -4,7 +4,7 @@
 - The old `Scriptorium.bat` and the portable folder are gone; use the installers below. Developers can still run `npm start` inside `app/`, and `app/selftest.js` is the automated test.
 - **Windows:** run `dist\Scriptorium-Setup-<version>.exe`. It installs Scriptorium for your user and adds a **Start-menu entry and a desktop shortcut**. To pin it to the taskbar, right-click the Start-menu entry → Pin to taskbar.
 - **Linux:** two options.
-  - Extract `dist/Scriptorium-<version>-linux-x64.tar.gz` anywhere and start `Scriptorium/scriptorium` once. Then use **Settings → Shortcuts & about → Create Start menu and desktop shortcuts** to add it to the app menu.
+  - Extract `dist/Scriptorium-<version>-linux-x64.tar.xz` anywhere and start `Scriptorium/scriptorium` once. Then use **Settings → Shortcuts & about → Create Start menu and desktop shortcuts** to add it to the app menu.
   - Or, on a Linux PC, run `npm run dist:linux` in `app/` to get a proper AppImage + .deb. Those can't be made on this Windows PC, because Windows won't allow the symlinks they need.
 - **macOS:** on a Mac, run `npm install` and then `npm run dist:mac` in `app/`. That makes a `.dmg`; drag Scriptorium into Applications. This can't be built on Windows, and the app isn't code-signed, so the first launch needs right-click → Open.
 - The projector is **off at start**. **Show** turns it on, or use the "Projector off/on" button at the top.
