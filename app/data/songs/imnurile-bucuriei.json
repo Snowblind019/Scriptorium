@@ -1,0 +1,105 @@
+{
+"id": "imnurile-bucuriei",
+"name": "Imnurile Bucuriei",
+"short": "IB",
+"description": "Imnurile Bucuriei – importat de pe cantaricrestine.ro (categoria „ib”).",
+"dataVersion": 4,
+"songs": [
+{
+"number": 1,
+"title": "Doamne mare fii slăvit",
+"sections": [
+{
+"type": "verse",
+"text": "Doamne mare fii slăvit\nNoi lăudăm a Ta putere,\nChiar pămîntul rotunjit\nTe admiră printre stele,\n//: Căci ești singur neschimbat\nDoamne-n toate-ai triumfat. ://"
+},
+{
+"type": "verse",
+"text": "Heruvimi și serafimi\nProslăvesc a Ta mărire\nÎngerii în cor sublim\nCîntă-n marea strălucire\n//: Toți Îți cîntă tot mereu\nSfînt, sfînt, sfînt\nE Dumnezeu. ://"
+},
+{
+"type": "verse",
+"text": "Toți Îți cîntă 'Tu ești sfînt'\nToată oastea Ta cerească,\nCer și mare și pămînt,\nVor mereu să Te slșvească.\n//: Totu-i plin de slava Ta\nGlorie! Aleluia! ://"
+},
+{
+"type": "verse",
+"text": "Tu privești îndurător\nLa întreaga creatură\nȘi conduci biruitor\nPe cei ce-s a Ta făptură,\n//: Cînd Isus va apărea\nVom privi toți fața Sa. ://"
+}
+]
+},
+{
+"number": 2,
+"title": "Dumnezeu fie lăudat",
+"sections": [
+{
+"type": "verse",
+"text": "Dumnezeu fie lăudat\nTatăl, Fiul și Duhul Sfînt,\nCare într-un chip minunat\nNe conduce\nPe-acest pămînt."
+}
+]
+},
+{
+"number": 3,
+"title": "O, Doamne mare, cînd privesc eu lumea",
+"sections": [
+{
+"type": "verse",
+"text": "O, Doamne mare,\nCînd privesc eu lumea,\nCe ai creat-o prin al Tău Cuvînt\nȘi ființele ce-mpodobesc natura,\nCum le-ntreții\nCu brațul Tău cel sfînt."
+},
+{
+"type": "chorus",
+"text": "//: Atunci Îți cînt,\nMăreț Stăpînitor:\nCe mare ești!\nCe mare ești! ://"
+},
+{
+"type": "verse",
+"text": "Privirea cînd mi-o-nalț\nȘi văd minunea:\nMulțimea astrelor ce-alerg pe cer,\nMărețul soare, cît și blînda lună,\nCa mingi de aur plutind în eter."
+},
+{
+"type": "verse",
+"text": "Cînd întîlnesc\nPe Domnu-n Cartea Sfîntă\nȘi cînd zăresc\nMulțimea de-ndurări;\nPe-ai Săi aleși\nCum i-a iubit într-una\nȘi i-a condus prin binecuvîntări."
+},
+{
+"type": "verse",
+"text": "Și-L văd pe Isus\nPe pămîntu-acesta\nCa serv, dar plin\nDe dragoste și har,\nZăresc în duh amara-I suferință\nȘi mîntuirea ce mi-o dă în dar."
+},
+{
+"type": "verse",
+"text": "Cînd mă apasă\nSarcini mari și grele,\nCînd sufletu-mi e trist\nPîn-la mormînt,\nEl se apleacă plin de mîngîiere,\nȘi-mi e-n tot chinul.\nȘi-orice legămînt"
+},
+{
+"type": "verse",
+"text": "Cînd Domnul bun\nMă va chema la Sine\nȘi cînd voi sta uimit în fața Sa,\nPrivind pe Domnul Sfînt\nAl veșniciei,\nCăzînd la tronu-I mă voi închina."
+}
+]
+},
+{
+"number": 4,
+"title": "A mea iubire și mîntuire",
+"sections": [
+{
+"type": "verse",
+"text": "A mea iubire\nȘi mîntuire\nÎmi este Domnul\nDe-a pururea!"
+},
+{
+"type": "chorus",
+"text": "//: Cu El sunt mîntuit,\nCu El sunt fericit\nCu El vreau să rămîn,\nDe-a pururea. ://"
+},
+{
+"type": "verse",
+"text": "El, pentru mine,\nPrintre suspine\nCununi de spini\nEl a suferit."
+},
+{
+"type": "verse",
+"text": "Din grea pierzare,\nDin răni amare\nPrin a Lui moarte,\nM-a mîntuit."
+},
+{
+"type": "verse",
+"text": "A Lui iubire,\nÎntreaga-mi fire\nÎn fericire\nEl mi-a schimbat."
+},
+{
+"type": "verse",
+"text": "Și la răbdare,\nCu ascultare\nSă trec prin toate\nEl m-a învățat!"
+}
+]
+}
+]
+}

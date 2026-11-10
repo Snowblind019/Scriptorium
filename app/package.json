@@ -1,0 +1,77 @@
+{
+  "name": "scriptorium",
+  "productName": "Scriptorium",
+  "version": "0.4.3",
+  "description": "Bible & song projection for church (VDC 1924 / BSB, C\u00eent\u0103rile Evangheliei and more)",
+  "author": "Scriptorium",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux",
+    "dist:mac": "electron-builder --mac",
+    "dist:portable": "node build/package.js"
+  },
+  "devDependencies": {
+    "@electron/packager": "^18.4.4",
+    "electron": "^38.0.0",
+    "electron-builder": "^25.1.8",
+    "rcedit": "^4.0.1"
+  },
+  "build": {
+    "appId": "ro.scriptorium.app",
+    "productName": "Scriptorium",
+    "electronVersion": "38.8.6",
+    "asar": false,
+    "directories": {
+      "output": "../dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "selftest.js",
+      "package.json",
+      "control/**",
+      "projector/**",
+      "shared/**",
+      "data/**",
+      "build/icon.png",
+      "build/icon.ico"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Scriptorium",
+      "artifactName": "Scriptorium-Setup-${version}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "AudioVideo",
+      "icon": "build/icon.png",
+      "maintainer": "Scriptorium",
+      "synopsis": "Bible & song projection",
+      "artifactName": "Scriptorium-${version}-${arch}.${ext}"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.png",
+      "artifactName": "Scriptorium-${version}-${arch}.${ext}"
+    }
+  }
+}

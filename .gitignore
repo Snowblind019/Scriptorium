@@ -1,0 +1,15 @@
+# Other programs and original source material (not used by Scriptorium; songs are already in app/data/songs)
+Holyrics/
+SoftProjector/
+database/
+*.apk
+
+# Installed packages and build output (recreate with: cd app && npm install / npm run dist:win)
+# The installers go to a GitHub Release instead – GitHub rejects files over 100 MB.
+app/node_modules/
+dist/
+
+# Download caches of the data scripts in tools/
+tools/_work/
+__pycache__/
+*.pyc

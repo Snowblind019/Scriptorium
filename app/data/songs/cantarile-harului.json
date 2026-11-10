@@ -1,0 +1,893 @@
+{
+"id": "cantarile-harului",
+"name": "Cîntările Harului",
+"short": "Harul",
+"description": "Importat din SoftProjector (harul.sps: „Cîntările Harului”)",
+"dataVersion": 4,
+"songs": [
+{
+"number": 1,
+"title": "Cît de mare ești Tu",
+"sections": [
+{
+"type": "verse",
+"text": "Cît de mare ești Tu, Doamne,\ncît de mic și ne-nsemnat sînt eu!\nTu ești Creator, Tu ești Ziditor,\nTu ești veșnic viu, Dumnezeu!"
+},
+{
+"type": "chorus",
+"text": "Toate Te slăvesc în veci, Stăpîne,\nToate merg așa cum voiești,\nȘi de-i rău acum în lume,\nE că un bine veșnic pregătești!"
+},
+{
+"type": "verse",
+"text": "Lîngă Tine-i sărbătoare,\nNecuprinsul minunat e-al Tău!\nChiar și-acest pămînt, unde-al Tău Cuvînt,\nE călcat mereu de cel rău!"
+},
+{
+"type": "verse",
+"text": "Ne-nțelese-s, Doamne, astăzi,\nAle Tale căi aicea jos!\nDar va fi o zi, cînd va străluci\nAdevărul Tău, Preafrumos!"
+},
+{
+"type": "verse",
+"text": "Adă mult dorita clipă,\nCînd pămîntul îl vei înoi,\nȘi în pacea Ta, toți îți vor cînta,\nCăci Stăpînul lui Tu vei fi!"
+}
+]
+},
+{
+"number": 2,
+"title": "Facă-mi-se totdeauna",
+"sections": [
+{
+"type": "verse",
+"text": "Facă-mi-se totdeauna\nDupă sfîntul Tău Cuvînt,\nChiar de-ar fi să-mi cadă toate\nPlanurile la pămînt\nChiar de-ar fi să-mi cadă toate,\nChiar de-ar fi să-mi cadă toate\nPlanurile la pămînt"
+},
+{
+"type": "verse",
+"text": "Gîndul Tău să se-mplinească\nNeștirbit în mine-oricînd,\nChiar de-ar fi să se dărîme\nTot ce mi-am zidit în gînd\nChiar de-ar fi să se dărîme,\nChiar de-ar fi să se dărîme\nTot ce mi-am zidit în gînd"
+},
+{
+"type": "verse",
+"text": "Voia Ta să se înalțe\nCa stăpînă-n viața mea,\nȘi-n fărîme sparge-mi voia\nPrintr-o lovitură grea\nȘi-n fărîme sparge-mi voia,\nȘi-n fărîme sparge-mi voia\nPrintr-o lovitură grea"
+},
+{
+"type": "verse",
+"text": "Rugăciunea asta, Doamne,\nTu să mi-o asculți mereu,\nIar, de-ar fi s-o schimb vreodată\nN-asculta de gîndul meu\nIar, de-ar fi s-o schimb vreodată,\nIar, de-ar fi s-o schimb vreodată\nN-asculta de gîndul meu"
+}
+]
+},
+{
+"number": 3,
+"title": "Nu mă trece cu vederea",
+"sections": [
+{
+"type": "verse",
+"text": "Nu mă trece\nCu vederea\nO, Isus Hristos;\nTu ești Cel\nCe scapi de moarte\nPe cel păcătos!"
+},
+{
+"type": "chorus",
+"text": "Doamne, Doamne,\nPleacă-Ți fața Ta,\nCu vederea\nNu mă trece,\nNu mă lepăda!"
+},
+{
+"type": "verse",
+"text": "Lasă-mă\nLa tronul milei\nPace să găsesc\nPe genunchi\nPlecat în rugă\nSă-Ți mărturisesc:"
+},
+{
+"type": "verse",
+"text": "Din Cuvîntu-Ți\nPlin de viață,\nVin a mă-adăpa;\nÎn puterea milei Tale\nPun speranța mea!"
+},
+{
+"type": "verse",
+"text": "Sfînt izvor\nAl mîngîierii,\nSînge prețios,\nSpală tot\nCe nu-i pe voia\nLui Isus Hristos!"
+}
+]
+},
+{
+"number": 4,
+"title": "Doamne, voia Ta",
+"sections": [
+{
+"type": "verse",
+"text": "Doamne, voia Ta să ne-nveți,\nși pătrunde-adînc ale noastre vieți.\n/:Dăne-al Tău cuvînt hrană și-ajutor,\ndune la pășuni, blînd Păstor.:/"
+},
+{
+"type": "verse",
+"text": "Doamne fă să fim tot mai veghetori,\nȘi să fim mereu mai ascultători.\n/:Să purtăm în noi sufletul curat,\nde-orice duh străin și păcat.:/"
+},
+{
+"type": "verse",
+"text": "Ca în ziua cînd Tu ne vei chema,\nsă ne spui cu drag:”vino sluga Mea!”,\n/:Și cu Tine-apoi noi să fim mereu,\nMoștenind pe veci cerul Tău.:/"
+}
+]
+},
+{
+"number": 5,
+"title": "Să-nalț jertfa Ta, Isuse",
+"sections": [
+{
+"type": "verse",
+"text": "Să-nalț jertfa Ta, Isuse,\nMai întîi și mai deplin,\nHarurile ei aduse\nȘi comorile-i nespuse,"
+},
+{
+"type": "verse",
+"text": "//: Iată ce doresc, iată ce doresc,\nIată ce doresc, Amin! ://"
+},
+{
+"type": "verse",
+"text": "Să spun despre crucea-Ți sfîntă,\nDespre darul ei divin,\nAzi cînd lumea se frămîntă\nȘi pe-a morții căi se-avîntă,"
+},
+{
+"type": "verse",
+"text": "Să cînt Golgota măreață\nÎntr-un cîntec mai senin,\nSpre-o eternă dimineață,\nDoamne-aprinde-n a mea viață,"
+}
+]
+},
+{
+"number": 6,
+"title": "Te văd mergînd prin praf",
+"sections": [
+{
+"type": "verse",
+"text": "Te văd mergînd prin\nPraf și soare,\nSfîrșind lucrarea-Ți salvatoare:\nTe văd cum prin mulțimi străine,\nIsus, duci crucea pentru mine"
+},
+{
+"type": "chorus",
+"text": "Mulțumesc și mă închin\nO, Isuse, Miel divin,\nCăci prin jertfa Ta mi-ai dat Harul vieții nesecat,\nLăudat, lăudat,\nLăudat fii, lăudat!"
+},
+{
+"type": "verse",
+"text": "Te văd cum fruntea cu ocară\nVrăjmașii Ți-o încununară,\nTe văd și înțeleg mai bine\nCît ai plătit Tu pentru mine"
+},
+{
+"type": "verse",
+"text": "Te văd întins smerit pe cruce,\nCum sîngele șuvoi se duce,\nTe văd sub norii urii pline,\nIsus, cum suferi pentru mine"
+},
+{
+"type": "verse",
+"text": "Te văd în marea Ta durere,\nStînd singur fără mîngîiere,\nTe văd sub lovituri haine,\nCum mori, Isuse, pentru mine"
+},
+{
+"type": "verse",
+"text": "Te văd, dreptatea cea divină\nCerea o jertfă pentru vină,\nȘi pe altar Te-ai pus pe Tine,\nPlătind Tu prețul pentru mine"
+}
+]
+},
+{
+"number": 7,
+"title": "Spre pomenirea Ta",
+"sections": [
+{
+"type": "verse",
+"text": "Spre pomenirea Ta, Isuse,\nnoi sîntem iarăși adunați\nȘi suferințele-Ți nespuse\nni le-amintim înfiorați."
+},
+{
+"type": "chorus",
+"text": "Îți mulîumim, îți mulțumim,\nde jertfa Ta îți mulțumim,\nIsuse, Isuse, Mîngîietorul nostru-Ți mulțumim."
+},
+{
+"type": "verse",
+"text": "Spre pomenirea morții Tale\ndin pîine-acuma noi gustăm,\nTu ne-ai deschis a vieții cale\nși părtășia-n care stăm."
+},
+{
+"type": "verse",
+"text": "Spre pomenirea necurmată\na sîngelui Tău, sfînt vărsat,\nDin vin gustăm și de-astă dată,\nprin Sînge ne-ai răscumpărat."
+},
+{
+"type": "verse",
+"text": "Și Tu ne-ai învățat ca-n lume,\nașa să facem, cît vom fi,\nCuvîntu-acesta să ne-ndrume\nsă Te putem deplin cinsti."
+},
+{
+"type": "verse",
+"text": "Ne închinăm cu mulțumire\nși-acum și-n vecii toți apoi,\nDe jertfa Ta, de-a Ta iubire,\nde ce-ai făcut Tu pentru noi."
+}
+]
+},
+{
+"number": 8,
+"title": "De n-ar fi harul Tău",
+"sections": [
+{
+"type": "verse",
+"text": "De n-ar fi herul Tău să-mi umple adîncul sufletului meu,\nCe gol aș fi, și ce-ntuneric cumplit m-ar stăpîni mereu!\nCe gol aș fi, și ce-ntuneric cumplit m-ar stăpîni mereu!"
+},
+{
+"type": "verse",
+"text": "De n-ar fi harul Tău, ce-nfrîngeri de peste tot aș suferi,\nCe stări de deznădejde crudă întreg și-adînc m-ar copleși!\nCe stări de deznădejde crudă întreg și-adînc m-ar copleși!"
+},
+{
+"type": "verse",
+"text": "De n-ar fi harul Tău, nici pacea și nici iubirea n-aș gusta,\nAș fi un ghem de răutate, pornit numai în contra Ta!\nAș fi un ghem de răutate, pornit numai în contra Ta!"
+},
+{
+"type": "verse",
+"text": "Doar harul Tău, Isuse, Doamne\nmă umple și-mi aduce tot;\nPrin el mi-ai dat și-mi dai atîtea comori,\ncă nici să spun nu pot.\nPrin el mi-ai dat și-mi dai atîtea comori,\ncă nici să spun nu pot."
+}
+]
+},
+{
+"number": 9,
+"title": "În umblarea mea",
+"sections": [
+{
+"type": "verse",
+"text": "În umblarea mea prin lume,\nÎn ispitele haine\nPeste tot, Isuse, Doamne,\nNumai harul Tău mă ține!"
+},
+{
+"type": "chorus",
+"text": "Numai harul, numai harul\nMă păstrează ne-ncetat,\nEl mă face, el mă ține Credincios cu-adevărat!"
+},
+{
+"type": "verse",
+"text": "Pe cărarea curăției\nȘi în luptă spre mai bine\nSă mă țin nu pot, ci-ntr-una, Numai harul Tău mă ține!"
+},
+{
+"type": "verse",
+"text": "Cînd aș vrea s-ascult Cuvîntul,\nSă-L primesc cum se cuvine\nVăd cum totu-mi stă-mpotrivă, Numai harul Tău mă ține!"
+},
+{
+"type": "verse",
+"text": "În lucrarea Ta preasfîntă Unde m-ai chemat pe mine,\nCît e de puțină roada,\nNumai harul Tău mă ține!"
+},
+{
+"type": "verse",
+"text": "Orișicînd și-n orice stare, Doamne, îndrăznesc la Tine,\nȘi-n cădere și-n ‘nălțare, Numai harul Tău mă ține!"
+}
+]
+},
+{
+"number": 10,
+"title": "Așa ai vrut Tu -/-Dacă-ntr-o tainica",
+"sections": [
+{
+"type": "verse",
+"text": "Dacă-n-tro tainică vreme din lut Cineva mă făcu\nȘi dacă sunt om și nu vierme, o, Doamne, așa ai vrut Tu,\nAșa ai vrut Tu, așa ai vrut Tu,\nȘi dacă sunt om și nu vierme, o, Doamne, așa ai vrut Tu."
+},
+{
+"type": "verse",
+"text": "Dacă am grai și nu muget, să spun ce iubesc și ce nu,\nȘi dacă am harul să cuget, o, Doamne, așa ai vrut Tu,\nAșa ai vrut Tu, așa ai vrut Tu,\nȘi dacă am harul să cuget, o, Doamne, așa ai vrut Tu."
+},
+{
+"type": "verse",
+"text": "Dacă întîia zidire, deplin în păcat se pierdu,\nCînd totuși mi-ai dat izbăvire, o, Doamne, așa ai vrut Tu,\nAșa ai vrut Tu, așa ai vrut Tu,\nCînd totuși mi-ai dat izbăvire, o, Doamne, așa ai vrut Tu."
+},
+{
+"type": "verse",
+"text": "Dacă m-ai scos din neghină, nu viața-mi urîtă-Ți plăcu,\nNu eu am vrut iarăși lumină, ci, Doamne, așa ai vrut Tu,\nAșa ai vrut Tu, așa ai vrut Tu,\nNu eu am vrut iarăși lumină, ci, Doamne, așa ai vrut Tu."
+},
+{
+"type": "verse",
+"text": "Și dacă voi merge odată, la Cel ce din Duh mă născu,\nVoi spune de-apururea Tată! Te laud c-așa ai vrut Tu,\nAșa ai vrut Tu, așa ai vrut Tu,\nVoi spune de-apururea Tată! Te laud c-așa ai vrut Tu."
+}
+]
+},
+{
+"number": 11,
+"title": "Doamne Tu nădejdea",
+"sections": [
+{
+"type": "verse",
+"text": "Doamne, Tu, Nădejdea celor apăsați,\nMîngîiere dulce celor întristați\n/:Întărește-mi astăzi sufletul lovit,\nCa să nu se frîngă deznădăjduit.:/"
+},
+{
+"type": "verse",
+"text": "Doamne, Tu, Lumina nopților tîrzii,\nAdăpost și pază inimii pustii.\n/:Luminează-mi pașii ca să urce lin,\nCalea crucii Tale azi cînd nu-i senin.:/"
+},
+{
+"type": "verse",
+"text": "Doamne, Tu, Viața noastr-a-tuturor,\nAjutorul celor fără ajutor,\n/:Înoiește-mi harul vieții necurmat,\nSă Te-nalți în mine mai cu-adevărat:/"
+}
+]
+},
+{
+"number": 12,
+"title": "O vino, vino Isuse dulce",
+"sections": [
+{
+"type": "verse",
+"text": "O, vino, vino, Isuse dulce.\nTe cheamă astăzi iubirea mea.\n/:Tot mai străină, tot mai departe,\nmi-e lumea-n care străbat prin ea.:/"
+},
+{
+"type": "verse",
+"text": "O, vino, vino, s-aduci cu Tine\nO stare nouă, cu-n nou avînt,\n/:spre-o mai frumoasă și limpezită\nIubire-aprinsă din focul sfînt.:/"
+},
+{
+"type": "verse",
+"text": "O, vino, vino, Te-așteaptă-ntruna\nIubire-ami albă cu flori de jar.\n/:și-n sărbătoarea ne-mai sfîrșită\nVom fi-mpreună, scăldați în har.:/"
+},
+{
+"type": "verse",
+"text": "O, vino, vino, Isuse dulce,\nmi-e dor de Tine, de-ai Tăi mi-e dor,\n/:cu toți acasă pe veșnicie\nCînta-Ți-vom slavă în veșnic cor.:/"
+}
+]
+},
+{
+"number": 13,
+"title": "Spre țara luminii",
+"sections": [
+{
+"type": "verse",
+"text": "/:Spre țara Luminii Eterne, Noi azi călătorim,\nDurerea pe drum ni-se-așterne, dar noi o biruim.:/"
+},
+{
+"type": "chorus",
+"text": "Căci viața noastră-i plină de Tine-al nostru Dor,\nIsuse, izvor e lumină și scump Mîntuitor."
+},
+{
+"type": "verse",
+"text": "/:Frumoasă, frumoasă e țara ce Tu ne-ai pregătit,\nEternă va fi primăvara în cerul fericit.:/"
+},
+{
+"type": "verse",
+"text": "/:Iubirea Ta astăzi ne leagă prin lumea de dureri,\nȘi-n drumul spre țara cea dragă, ne dai dulci mîngîieri.:/"
+}
+]
+},
+{
+"number": 14,
+"title": "De dorul Tău",
+"sections": [
+{
+"type": "verse",
+"text": "De dorul Tău, Isus iubit,\nÎn dragostea Ta arse,\nȘi inima spre Răsărit,\nȘi fața ni-s întoarse."
+},
+{
+"type": "verse",
+"text": "Isus, Isus... și Te-așteptăm\nCum crinii-așteaptă rouă,\nPrivind spre ceruri Te chemăm\nCu mîinile-amîndouă."
+},
+{
+"type": "verse",
+"text": "Treci peste anii viitori,\nO, Mire drag, și vină,\nNe du mai sus, mai sus de zori,\nSpre țara de lumină."
+},
+{
+"type": "verse",
+"text": "Și-n clipa cînd ni-i cununa\nCu-a slavei Tale taine,\nSchimbați în chipul Tău\nNi-i da a păcii albe haine."
+},
+{
+"type": "verse",
+"text": "Iar noi, iubit și drag Isus,\nȚi-om da cu brațe pline\nToți crinii dorului nespus\nȘi-ai dragostei de Tine."
+},
+{
+"type": "verse",
+"text": "Și Ți-i vom presăra în drum\nC-o veșnică-nchinare,\nPrecum Îți presărăm acum\nA dragostei cîntare."
+},
+{
+"type": "verse",
+"text": "În zorii fiecărei luni\nVom strînge cu uimire\nDin pomii veșnicei minuni\nNoi roduri de iubire"
+},
+{
+"type": "verse",
+"text": "Și-Ți vom cînta, Isus iubit,\nDe drag, o veșnicie,\nCă Te-am chemat și Te-am dorit\nCît nimenea nu știe."
+}
+]
+},
+{
+"number": 15,
+"title": "Eu nu sînt mai mult",
+"sections": [
+{
+"type": "verse",
+"text": "Eu nu sunt mai mult\ndecît fulgul de nea,\nUn joc de cristale\ne trecerea mea,\n//: Se scutură clipa din timpul deplin,\nSurîde și cade și altele vin.://"
+},
+{
+"type": "verse",
+"text": "Eu nu sunt mai mult\nca un fir de parîng\nCe coasa îl taie\nși furcile-l strîng.\n//: Țărîna rămîne și uită de el\nȘi alt fir se 'nalță și cade la fel. ://"
+},
+{
+"type": "verse",
+"text": "Eu nu sunt mai mult\nca o rază-n abis,\nDar drumul spre soare\noricînd mi-e deschis.\n//: Eu nu sunt luceafăr\ncu chip marmoreu,\nPe fruntea mea însă e scris: Dumnezeu! ://"
+}
+]
+},
+{
+"number": 16,
+"title": "Cînd Ți-am înțeles chemarea",
+"sections": [
+{
+"type": "verse",
+"text": "Cînd Ți-am înțeles chemarea\neu de toate m-am lipsit,\n/:Și-am venit să stau cu Tine\ncăci, Isuse, Te-am iubit.:/"
+},
+{
+"type": "verse",
+"text": "M-am desprins de hora lumii\nDin plăcerea ei m-am smuls,\n/:Și-am venit să stau cu Tine\nȘi, Isuse, să Te-ascult.:/"
+},
+{
+"type": "verse",
+"text": "Despărțitu-m-am de prieteni\nȘi de-ai mei m-am despărțit,\n/:Și-am venit să stau cu Tine\nCăci, Isuse, Te-am iubit.:/"
+},
+{
+"type": "verse",
+"text": "Cartea Ta îmi este lege\nȘi cuvîntul Tău mi-e crez,\n/:Am venit să stau cu Tine\nVreau, Isuse, Să-Ți urmez.:/"
+},
+{
+"type": "verse",
+"text": "Fă ce vrei de-acum cu mine\nDă-mi ce vrei cu drag primesc,\n/:Nu mă mai despart de Tine\nCăci Isuse Te iubesc.:/"
+}
+]
+},
+{
+"number": 17,
+"title": "De ce nu vii de pe cărări străine",
+"sections": [
+{
+"type": "verse",
+"text": "De ce nu vii de pe cărări străine\nSă-Mi cazi la piept ca un copil iertat?\nEu n-am fugit,\nCînd numai pentru tine,\nCa și Isaac am fost pe rug urcat\nDe ce nu vii, de ce nu vii?\nCa și Isaac am fost pe rug urcat!"
+},
+{
+"type": "verse",
+"text": "Mai mult de-atît,\nCe jertfă de iubire?\nȘi cui i-a dat mai mult\nDe-atît prin gînd?\nUn fiu pierdut să rîdă în neștire\nȘi-un Dumnezeu să cheme lăcrimînd!\nDe ce nu vii, de ce nu vii,\nCînd Dumnezeu\nTe cheamă lăcrimînd?"
+},
+{
+"type": "verse",
+"text": "De ce nu vii cînd\nÎncă sunt aproape?\nDe ce te-ascunzi,\nCînd încă te mai chem?\nDe ce nu simți lumina Mea pe pleoape\nCînd te privesc ca Salvator suprem?\nDe ce nu vii, de ce nu vii,\nCînd te privesc ca Salvator suprem?"
+},
+{
+"type": "verse",
+"text": "De ce nu vrei\nSă fii cu Mine-n slavă,\nSă colindăm alături ceru-ntreg?\nDin flori de rai,\nDin veșnica dumbravă,\nCu mîna Mea cunună să-ți aleg?\nDe ce nu vii, de ce nu vii,\nCu mîna Mea cunună să-ți aleg?"
+},
+{
+"type": "verse",
+"text": "De ce nu vii,\nTu, suflet nestatornic,\nCînd încă pot Mîntuitor să-ți fiu?\nCînd vei striga, va fi atunci zadarnic,\nVei plînge-amar,\nDar fi-va prea tîrziu!\nDe ce nu vii, de ce nu vii?\nVei plînge-amar,\nDar fi-va prea tîrziu!"
+},
+{
+"type": "verse",
+"text": "Mai mult de-atît,\nCe jertfă de iubire,\nȘi cui i-a dat mai mult\nDe-atît prin gînd?\nUn fiu pierdut să rîdă în neștire\nȘi-un Dumnezeu să cheme lăcrimînd?\nDe ce nu vii, de ce nu vii,\nCînd Dumnezeu\nTe cheamă lăcrimînd?"
+}
+]
+},
+{
+"number": 18,
+"title": "De-atîtea ori te-a cercetat",
+"sections": [
+{
+"type": "verse",
+"text": "De-atîtea ori te-a cercetat pe tine\nCuvîntul blînd și trist și mustrător,\n/:tu n-ai simțit nici teamă, nici rușine\nAh, cît mai poți să stai nepăsător?:/"
+},
+{
+"type": "verse",
+"text": "Cînd Domnul stă la ușa ta și bate,\nDe-atîta timp, tăcut și răbdător,\n/:tu nu-L primești, în pofte și-n păcate,\nO, cît mai poți să stai nepăsător?:/"
+},
+{
+"type": "verse",
+"text": "Ce inimă-mpietrită porți în tine,\nDe poți să fii mereu nesimțitor,\n/:Vai, vine mîine, mîine moartea vine,\nAh, cît mai poți să stai nepăsător?:/"
+}
+]
+},
+{
+"number": 19,
+"title": "Două drumuri",
+"sections": [
+{
+"type": "verse",
+"text": "Două drumuri sînt pe lume, Unul bun și altul rău,\n/:Unul duce la pierzare, Celălalt la Dumnezeu. :/"
+},
+{
+"type": "verse",
+"text": "Din aceste două drumuri, Unu-i larg și e frumos,\n/:Celălalt e strîmt și-adesea, e cu spini și-anevoios.:/"
+},
+{
+"type": "verse",
+"text": "Însă drumul larg și neted, drumul lumii-amăgitor,\n/:Are la sfîrșit pierzarea, focul cel mistuitor.:/"
+},
+{
+"type": "verse",
+"text": "Pe cînd drumul strîmt, la capăt are raiul luminos,\n/:Fericit, cel care-l umblă, căci ne duce la Hristos.:/"
+}
+]
+},
+{
+"number": 20,
+"title": "Golgota, Golgota o loc minunat",
+"sections": [
+{
+"type": "verse",
+"text": "Golgota, Golgota, o, loc minunat,\nMai ′nalt decît munții,\nmai sfînt mai curat.\nPe tine urcat-a smerit și supus\nCu crucea în spate\npreablîndul Isus."
+},
+{
+"type": "verse",
+"text": "Pe tine, Golgota, viața Și-a dat\nPe noi să ne scape\nde greul păcat.\nȘi prețul cel mare ce El L-a plătit\nNe-a dat împăcarea\ncu Tatăl slăvit."
+},
+{
+"type": "verse",
+"text": "Golgota, Golgota,\nce har ți-a fost dat,\nPe culmea Ta Domnul\nne-a răscumpărat.\nVeniți toți pierduții,\nsalvarea-i la ea,\nIzvorul iertării e-n veci Golgota."
+}
+]
+},
+{
+"number": 21,
+"title": "Trece-ncet cu crucea",
+"sections": [
+{
+"type": "verse",
+"text": "Trece-ncet cu crucea Domnul, către Golgota se suie\nIar în palme și-n picioare, fărdelegea-i bate cuie."
+},
+{
+"type": "chorus",
+"text": "Chin amar(un chin amar) El a răbdat,(El a răbdat),\nPentru-al nos-(Da, pentru-al nost)-tru\ngreu păcat.(prea greu păcat).\nDar prin chi-(Dar prin chin)-nul suferit,(ce-a suferit)\nEl pe toți(Da, El pe toți) -ne-a mîntuit.(ne-a mîntuit)."
+},
+{
+"type": "verse",
+"text": "Trece Domnul și suspină, și se roagă pentru tine.\nSă nu pieri în fărdelege, să te-apropie de Sine."
+},
+{
+"type": "verse",
+"text": "Dacă vrei ca mîntuire, suflete, să ai vreo-dată,\nCătre Golgota, cu Domnul, suie calea-n-sîngerată."
+},
+{
+"type": "verse",
+"text": "Suie și sub cruce-n lacrimi, plîngi păcatul tău și-l lasă,\nNumai sîngele Său spală, viața ta cea păcătoasă."
+}
+]
+},
+{
+"number": 22,
+"title": "Veniți, veniți cu toții",
+"sections": [
+{
+"type": "verse",
+"text": "Veniți, veniți cu toții, la muntele cel sfînt,\nLa Golgota, Izvorul vieții pe pămînt.\nNu pierdeți vremea-n lume, venți acuma-n sus.\nCăci soarele apune, viața vi s-a dus."
+},
+{
+"type": "verse",
+"text": "La Golgota aflaveți al mîntuirii har,\nIertarea și viața cea veșnică în dar.\nNu-ntîrziați pe cale, grăbiți-vă curînd,\nSpre Golgota vă cheamă, Isus cu glasul Blînd."
+},
+{
+"type": "verse",
+"text": "Acolo-i locu-n care veți fi pe veci scutiți,\nDe chin, de plîns, de jale și moarte izbăviți.\nVeniți, veniți cu toții, la muntele cel sfînt,\nLa Golgota, izvorul, vieții pe pămînt."
+}
+]
+},
+{
+"number": 23,
+"title": "Eu mă-ncred în harul Tău",
+"sections": [
+{
+"type": "verse",
+"text": "Eu mă-ncred în Harul tău, nu-n puterea mea.\nDe ispita celui rău, El mă v-a scăpa.\nEu mă-ncred(eu mă-ncred),\neu mă-ncred(eu mă-ncred), Doamne, numa-n Tine,\n/:orice har(orice har), orice har(orice har)\nDe la Tine-mi vine.:/"
+},
+{
+"type": "verse",
+"text": "Eu ma-ncred în orice timp în Cuvîntu-Ți viu,\nOrice-ar fi, nu vreau să-l schimb, felul lui să-l știu.\nEu mă-ncred(eu mă-ncred), eu mă-ncred(eu mă-ncred), Doamne, numa-n Tine,\n/:orice har(orice har), orice har(orice har)\nDe la Tine-mi vine.:/"
+},
+{
+"type": "verse",
+"text": "Eu mă-ncred în calea Ta-și nimic mai mult\nAlte căi de m-ar chema, nu vreau să le-ascult.\nEu mă-ncred(eu mă-ncred), eu mă-ncred(eu mă-ncred), Doamne, numa-n Tine,\n/:orice har(orice har), orice har(orice har)\nDe la Tine-mi vine.:/"
+},
+{
+"type": "verse",
+"text": "Eu mă-ncred în tot ce-mi dai, căci tot ce primesc,\nÎmi preschimba viața-n rai, Tatăl meu Ceresc.\nEu mă-ncred(eu mă-ncred), eu mă-ncred(eu mă-ncred),\nDoamne, numa-n Tine,\n/:orice har(orice har), orice har(orice har)\nDe la Tine-mi vine.:/"
+}
+]
+},
+{
+"number": 24,
+"title": "Nu voia mea",
+"sections": [
+{
+"type": "verse",
+"text": "Nu voia mea, ci voia Ta, (voia Ta)\nîn toate s-omplinesc,(voia Ta),\nOrice-aș plăti, cît m-ar costa,(voia Ta),\ndar vreau să fie voia Ta,(voia Ta),\nDar vreau să fie voia Ta, O, Tatăl meu Ceresc (voia Ta), O, Tatăl meu ceresc.(voia Ta)."
+},
+{
+"type": "verse",
+"text": "Nu voia mea, ci voia Ta(voia Ta),\nS-o-nalț oricînd deplin(voia Ta),\nOrice mi s-ar putea-n tîmpla(voia Ta),\ndar vreau să fie voia Ta(voia Ta),\nDar vreau să fie voia Ta, O, Tatăl meu divin(voia Ta)\nO, Tatăl meu divin.(voia Ta)."
+},
+{
+"type": "verse",
+"text": "Nu voia mea, ci voia Ta,(voia Ta),\nsă fie-n tot ce sînt.(voia Ta),\nChiar singur daca-ș rămînea(voia Ta),\ndar vrea să fie voia Ta,(voia Ta),\nDar vreau să fie voia Ta, O, Tatăl meu cel sfînt(voia Ta),\nO, Tatăl meu cel sfînt.(voia Ta)."
+},
+{
+"type": "verse",
+"text": "Nu voia mea, ci voia Ta,(voia Ta),\nși-acum și-n nesfîrșit.(voia Ta),\nPe Tine să te pot nălța,(voia Ta),\nașa cum este voia Ta,(voia Ta),\nAșa cum este voia Ta, O, Tatăl meu slăvit,(voia Ta),\nO, Tatăl meu slăvit,(voia Ta)."
+},
+{
+"type": "verse",
+"text": "Căci voia Ta, e viața mea,(voia Ta),\ne cît nu pot să spun,(voia Ta),\nEa-mi dă Împărăția cea (voia Ta),\ncu haruri nemaspuse-n ea,(spuse-n ea,),\nCu haruri nemaispuse-n ea, O, Tatăl meu prea bun,(voia Ta) O, Tatăl meu prea bun,(voia Ta)."
+}
+]
+},
+{
+"number": 25,
+"title": "O crește-mi iubirea",
+"sections": [
+{
+"type": "verse",
+"text": "O, crește-mi iubirea în inima mea,\nIsuse, Isuse, mereu Te-oi ruga,\nÎmi umple cu dorul pe care-l aștept\nȘi ochii și graiul și inima-n piept."
+},
+{
+"type": "verse",
+"text": "O, crește-mi iubirea, Isuse iubit\nSă fiu de-a ei haruri deplin copleșit;\nRevarsă-mi-o-n suflet cu val după val\nCa rîul ce crește de dă peste mal."
+},
+{
+"type": "verse",
+"text": "O, crește-mi iubirea, iubite Isus,\nÎn starea și-n locul în care m-ai pus;\nSă port pretutindeni belșugul de har\nȘi-a ei revărsare să n-aibă hotar."
+},
+{
+"type": "verse",
+"text": "O, crește-mi iubirea cu focu-i sfințit\nȘi chiar de m-ar arde, să fiu mistuit;\nFlămînd de iubire mereu Te-oi ruga:\nO, crește-mi iubirea în inima mea!"
+}
+]
+},
+{
+"number": 26,
+"title": "La Tine vin Isuse Iar",
+"sections": [
+{
+"type": "verse",
+"text": "La Tine vin, Isuse iar, picioarele să-Ți strîng\nTrecutul să mi-l plîng amar, păcatul să mi-l plîng,\nCăci am greșit, Isuse bun, și-i mare vina mea,\nDar mii de lacrimi calde-adun și-Ți cer a mi-o spăla."
+},
+{
+"type": "verse",
+"text": "Atîția păcătoși s-au strîns de-atîția ani mereu,\nStropind cu lacrimi și cu plîns, păcatul lor cel greu,\nIar Tu pe toți i-ai ascultat, pe vameși și pe hoți,\nPrin jertfa Crucii i-ai spălat și i-ai iertat pe toți."
+},
+{
+"type": "verse",
+"text": "De-aceia vin acum și eu, picioarele să-Ți strîng,\nCăci Tu-mi cunoști păcatul greu, și știi că eu mi-l plîng,\nSpre Tine glasul mi-l îndrept și Mila Ta o cer,\nO, Dă-mi iertarea ce-o aștept, nu mă lăsa să pier."
+}
+]
+},
+{
+"number": 27,
+"title": "Erai căzut",
+"sections": [
+{
+"type": "verse",
+"text": "Erai căzut, căzut în patimi rele,\nZaceai în groapa negrului păcat,\nCînd te-am aflat cînd lacrimile Mele,\nȘi sîngele iertării te-a salvat\nErai căzut, căzut, dar bunul Tată,\nn-a vrut să pieri pe veci nemîntuit,\nȘi Te-a chemat, și dragostea Lui toată,\nși jertfa Mea spre tine a venit."
+},
+{
+"type": "verse",
+"text": "Erai căzut, dar Duhul Sfînt în tine,\nLumina Lui cerească a aprins,\nȘi te-ai văzut, și te-ai întors la Mine,\nȘi-acum pe veci în har tu ești cuprins.\nErai căzut, căzut, dar o iertare,\ndeplină Dumnezeu ți-a dăruit.\nDe-acuma să-I slujești cu ascultare,\ncă-n cer te-așteaptă locul fericit."
+}
+],
+"words": "6/8",
+"music": "6/8"
+},
+{
+"number": 28,
+"title": "Eu am un scump Mîntuitor",
+"sections": [
+{
+"type": "verse",
+"text": "Eu am un scump Mîntuitor în încercări și-noapte,\nEl mă-ntărește ne-ncetat, prin sfintele Lui șoapte."
+},
+{
+"type": "chorus",
+"text": "Eu am(eu am), eu am(eu am), eu am un scump Mîntuitor,\nEl Har,(El Har), El Har(El Har), El Har îmi dă oricînd și ajutor."
+},
+{
+"type": "verse",
+"text": "Iubirea Lui îmi este scut și-odihnă-n frămîntare,\nIar cînd păcatul m-a rănit, la El am vindecare."
+},
+{
+"type": "verse",
+"text": "În crucea Lui am pe deplin puteri de biruință,\nȘi mîngîieri cînd trec prin văi adînci de suferință."
+},
+{
+"type": "verse",
+"text": "Cuvîntul Său e-un legămînt neclătinat și veșnic,\nPrin Sfînta Lui lumină sînt în noaptea lumii, sfeșnic."
+},
+{
+"type": "verse",
+"text": "Curînd El va veni, curînd, plinindese-a Lui voie,\nEu am un scump Mîntuitor, mai mult nu am nevoie."
+}
+]
+},
+{
+"number": 29,
+"title": "Pe marea de păcate",
+"sections": [
+{
+"type": "verse",
+"text": "Pe marea de păcate, cu greu eu trec, cu greu,\nLa orice pas e moarte, la orice pas e-un rău.\nDar cu Isus prin toate, eu trec biruitor,\nȘi teamă n-am în noapte, de-I sînt ascultător."
+},
+{
+"type": "verse",
+"text": "În trupul meu Isuse, vezi luptele și știi,\nCum valuri vin nespuse, cu lovituri mai vii.\nDeace-ea vin la Tine, prea-bun Mîntuitor,\nCa-n vremuri de suspine, să-mi vii în ajutor."
+},
+{
+"type": "verse",
+"text": "Îți mulțumesc, Stăpîne, și mă închin smerit,\nDe tot ce faci cu mine, de cînd m-ai mîntuit.\nTe laud prin cîntare, prin darul ce mi-ai dat,\nSă-Ți fiu spre înălțare! În veci fii lăudat!"
+}
+]
+},
+{
+"number": 30,
+"title": "Din Tine am venit iubire",
+"sections": [
+{
+"type": "verse",
+"text": "Din Tine am venit, Iubire, și tot spre Tine merg mereu,\nFrum-sețe și desăvîrșire, doar Tu dai sufletului meu."
+},
+{
+"type": "chorus",
+"text": "O, Iubire, o, Iubire, har etern venit de sus,\nMîntuire, mîntuire, prin Golgota mi-ai adus!"
+},
+{
+"type": "verse",
+"text": "De-și întruna ești cu mine, și necurmat mă fericești,\nMă arde dorul după Tine să Te pătrund mai mult cum ești."
+},
+{
+"type": "verse",
+"text": "Fă clipele vieții mele, izvoare proaspete de har,\nCa să țîșnești doar Tu din ele, îmbelșugat pe-orice hotar."
+},
+{
+"type": "verse",
+"text": "Din Tine am venit, Iubire, și merg spre Tine necurmat,\nCă-n binecuvînta-ta-Ți fire e Dumnezeu cu-adevărat."
+}
+]
+},
+{
+"number": 31,
+"title": "Isuse trezește-ți urmașii",
+"sections": [
+{
+"type": "verse",
+"text": "Isuse, trezeșt-ți urmașii căci somnul adînc i-a cuprins,\n/:În noaptea aceasta vrăjmașii, peTine Te vor iarăși prins!:/"
+},
+{
+"type": "verse",
+"text": "Vor mîinile Tale să-Ți lege, O, sfînt Adevăr luminos,\n/:Că-n lumea de-acum ne e lege, Să-Ți apere chipul frumos!:/"
+},
+{
+"type": "verse",
+"text": "Lucrarea Ți-o vor nimicită, pe Tine pe cruce Te vor,\n/:Păzește-i cu dreapta-Ți slăvită, pe-a cei ce-Ți urmează cu dor!:/"
+},
+{
+"type": "verse",
+"text": "Adună-i mereu lîngă Tine, că-n lume-s atîția dușmani,\n/:Și-atîtea trădări și suspine, și-atîtea grădini Ghetsimani.:/"
+},
+{
+"type": "verse",
+"text": "Mai trează le ține credința, și dragostea-n suflet curat,\n/:Să poarte și ei biruința, Isuse cum Tu ai purtat!:/"
+}
+]
+},
+{
+"number": 32,
+"title": "Am trecut prin clipe grele",
+"sections": [
+{
+"type": "verse",
+"text": "Am trecut prin clipe grele, prin primejdii și nevoi\n/:Însă Tu Isuse Doamne Ai rămas mereu cu noi.:/"
+},
+{
+"type": "verse",
+"text": "Ce făgăduință scumpă:că vei fi cu noi, ne-ai spus,\n/:Ea ne dă mereu putere să privim spre Tine sus.:/"
+},
+{
+"type": "verse",
+"text": "Și prin moarte de vom merge, ochiul Tău va priveghea\n/:Tu, prin Duhul Sfînt, Isuse, Calea ne-o vei lumina.:/"
+},
+{
+"type": "verse",
+"text": "Fie noaptea cît de neagră norul cît de nepătruns,\n/:Înainte noi vom merge Căci cu noi ești Tu, Isus.:/"
+}
+]
+},
+{
+"number": 33,
+"title": "Să nu merg dup-un străin",
+"sections": [
+{
+"type": "verse",
+"text": "Să nu merg după-un străin,\nDoamne, niciodată"
+},
+{
+"type": "verse",
+"text": "|: Chiar de-aș fi silit prin chin,\nOri pe-un drum cu flori de crin,\nSă nu merg după-un străin,\nCi să calc deplin, deplin,\nUrma Ta curată :|"
+},
+{
+"type": "verse",
+"text": "Să-nțeleg chemarea Ta\nPururea prin lume"
+},
+{
+"type": "verse",
+"text": "|: Zilnic s-o pot asculta\nȘi să nu m-abat din ea,\nSă-nțeleg chemarea Ta\nCa să-Ți pot mereu ‘nălța\nDoamne, sfîntu-Ți nume :|"
+},
+{
+"type": "verse",
+"text": "Să n-aduc pe-altarul sfînt\nFoc străin de Tine"
+},
+{
+"type": "verse",
+"text": "|: Ci aprins de-al Tău Cuvînt\nVreau să ard cu tot ce sunt\nSă n-aduc pe-altarul sfînt\nUn amestec de pămînt\nCi sfințit, pe mine :|"
+},
+{
+"type": "verse",
+"text": "Doamne, să mă-ncred deplin\nÎn cereasca-Ți mînă"
+},
+{
+"type": "verse",
+"text": "|: Mă păzește de străin,\nOchii-n ochii Tăi să-i țin,\nPașii-mi calce mai senin\nȘi pe drumul Tău divin\nPururi să rămînă :|"
+}
+]
+},
+{
+"number": 34,
+"title": "Cuvîntul Tău, Isuse azi",
+"sections": [
+{
+"type": "verse",
+"text": "Cuvîntul Tău Isuse azi iarăși ne-a grăit\nȘi tainica-Ți putere Adînc ne-a zguduit.\nTrezitu-ne-ai în inimi din nou al Tău fior\nȘi-n sufletele stinse un foc aprins de dor."
+},
+{
+"type": "verse",
+"text": "Lumina Ta cea sfîntă ne-a arătat pe noi\nCît sîntem de nevrednici și reci și stinși și goi.\nȘi Te-arătat pe Tine apoi iubit Isus,\nCît ești de bun, de tare și ce har ne-ai adus."
+},
+{
+"type": "verse",
+"text": "O, Tu, Isuse, Doamne, ești nesecat izvor\nCuvîntul Tău e veșnic putere și-ajutor.\nAjută-ne în totul să-L credem și trăim,\nPe Tine cu viața să Te mărturisim."
+}
+]
+},
+{
+"number": 35,
+"title": "Un cîntec de slavă răsună",
+"sections": [
+{
+"type": "verse",
+"text": "Un cîntec de slavă răsună:\nse zguduie noaptea cea grea\nAcuma Vestirea cea Bună\ndin veac Împlinirea și-o ia."
+},
+{
+"type": "chorus",
+"text": "Iubirea, Iubirea, Iubirea\npe Sine din cer S-a adus.\nȘi lumii să-i dea nemurirea,\nPreț moții pe Ea S-a adus."
+},
+{
+"type": "verse",
+"text": "În noaptea aceasta răsare\nal vecilor Soare slăvit,\nNe-aduce lumina din care\nÎntîiul păcat ne-a gonit."
+},
+{
+"type": "verse",
+"text": "Pe oameni salvați din pierzare\nsă-i ducă-n Edenul pierdut,\nSă-I-nalțe la starea din care\nîntîiul păcat i-a căzut."
+},
+{
+"type": "verse",
+"text": "Un cîntec de slavă străbate:\nIubirea la noi a venit,\nDe greul atîtor păcate,\npămîntul va fi izbăvit."
+},
+{
+"type": "verse",
+"text": "Primiți, o Primiți Vestea Bună,\nCăci ea pentru noi s-a adus\nCu cerul cîntați împreună,\nMărire în veci lui Isus!"
+}
+]
+},
+{
+"number": 36,
+"title": "La poarta ta bat",
+"sections": [
+{
+"type": "verse",
+"text": "La poarta ta bat azi îndurerate,\nA Dragostei aprinse stăruinți\nCu lacrima tăceri-nduioșate,\nDin vremea-ntîei noastre cunoștinți."
+},
+{
+"type": "chorus",
+"text": "Aduți aminte, O aduți aminte,\nde-ntîiul har al dragostei dintîi,\nDe fericirea fără de cuvinte,\nce-ți lumina al vieții căpătîi."
+},
+{
+"type": "verse",
+"text": "Aduți aminte clipele acele\nși uită-te la starea ta de-acum\nCînd stau și bat, cînd lacrimile Mele\nla poarta ta închisă cad în drum."
+},
+{
+"type": "verse",
+"text": "deschide iar iubirii care bate,\ndeschide-i iarăși dragostei fierbinți,\nDeschide-n părtășirilor curate\ndin vremea-ntîiei noastre cunoștiți."
+}
+]
+},
+{
+"number": 37,
+"title": "Haideți spre patria cerească",
+"sections": [
+{
+"type": "verse",
+"text": "Haideți spre patria cerească,\nHaideți creștini spre Canaan,\n|: Lăsați și grija cea lumească,\nFugiți din drumul lui Satan :|"
+},
+{
+"type": "verse",
+"text": "Mulți frați de-ai noștri\nSunt departe,\nAbia se mai zăresc pe drum,\n|: Iar noi, cu-nșelăciuni deșarte,\nVai, n-am plecat nici pîn-acum! :|"
+},
+{
+"type": "verse",
+"text": "Intrați și voi pe ușa strîmtă,\nCăci numai cei ce trec prin ea\n|: Ajung în patria cea sfîntă\nȘi moartea nu vor mai vedea! :|"
+},
+{
+"type": "verse",
+"text": "Auzi tu, dragă frățioare,\nCe dulci cuvinte ni s-au spus?\n|: De ce să n-ascultăm noi, oare,\nDe glasul Domnului Isus? :|"
+}
+]
+}
+]
+}

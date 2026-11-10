@@ -1,0 +1,313 @@
+{
+ "changed_songs": 477,
+ "changed_by_book": {
+  "Cîntările Evangheliei": 436,
+  "Laudele Domnului": 6,
+  "Cor / Orchestră": 18,
+  "Laudă și închinare": 5,
+  "Cîntările Harului": 12
+ },
+ "identical_text_skipped": {
+  "Cîntările Evangheliei": 58,
+  "Laudele Domnului": 7,
+  "Laudă și închinare": 1,
+  "Cîntările Harului": 1
+ },
+ "not_found": 881,
+ "not_found_by_book": {
+  "Cîntările Evangheliei": 724,
+  "Cor / Orchestră": 19,
+  "Laudă și închinare": 27,
+  "Cîntările Harului": 24,
+  "Altele": 87
+ },
+ "actions": 39,
+ "actions_by_type": {
+  "book created": 9,
+  "book merged": 1,
+  "moved from Altele": 29
+ },
+ "site_songs_not_in_ce": 581,
+ "site_songs_not_in_ce_by_category": {
+  "cr": 565,
+  "cn": 2,
+  "ca": 14
+ },
+ "books_created": {
+  "Cîntecele Bucuriei": 113,
+  "Pe drumul credinței": 456,
+  "Carte de cîntări": 1,
+  "Imnuri Creștine": 736,
+  "Imnuri Creștine (AZSMR)": 777,
+  "Imnurile Bucuriei": 4,
+  "Imnurile Harului": 3,
+  "Lăudați pe Domnul (Groza)": 10,
+  "Lăudați pe Domnul": 255
+ },
+ "books_merged": {
+  "Laudele Domnului": {
+   "category": "ld",
+   "songs": 491
+  }
+ },
+ "books": {
+  "Altele": 87,
+  "Cîntările Evangheliei": 1218,
+  "Cîntările Harului": 37,
+  "Cor / Orchestră": 37,
+  "Harfa Evangheliei": 292,
+  "Laudă și închinare": 33,
+  "Laudele Domnului": 491,
+  "Cîntecele Bucuriei": 113,
+  "Pe drumul credinței": 456,
+  "Carte de cîntări": 1,
+  "Imnuri Creștine": 736,
+  "Imnuri Creștine (AZSMR)": 777,
+  "Imnurile Bucuriei": 4,
+  "Imnurile Harului": 3,
+  "Lăudați pe Domnul (Groza)": 10,
+  "Lăudați pe Domnul": 255
+ },
+ "doubtful_matches": 30,
+ "site_songs_cached": {
+  "ca": 31,
+  "cr": 1200,
+  "cn": 482,
+  "cb": 200,
+  "ld": 800,
+  "pdc": 845,
+  "cc": 2,
+  "ic2": 1471,
+  "ic": 1437,
+  "ib": 7,
+  "ih": 4,
+  "lpdag": 20,
+  "lpd": 301
+ },
+ "category_vs_book_matrix": [
+  {
+   "category": "cb",
+   "book": "laudele-domnului",
+   "our_songs": 13,
+   "matched": 2,
+   "same_number": 0
+  },
+  {
+   "category": "cb",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "cb",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 1,
+   "same_number": 0
+  },
+  {
+   "category": "cb",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 4,
+   "same_number": 0
+  },
+  {
+   "category": "ld",
+   "book": "laudele-domnului",
+   "our_songs": 13,
+   "matched": 13,
+   "same_number": 13
+  },
+  {
+   "category": "ld",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 8,
+   "same_number": 0
+  },
+  {
+   "category": "ld",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 5,
+   "same_number": 0
+  },
+  {
+   "category": "ld",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 1,
+   "same_number": 0
+  },
+  {
+   "category": "pdc",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 10,
+   "same_number": 0
+  },
+  {
+   "category": "pdc",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 5,
+   "same_number": 0
+  },
+  {
+   "category": "pdc",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "cc",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "cc",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "cc",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "ic2",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 1,
+   "same_number": 0
+  },
+  {
+   "category": "ic2",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "ic2",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 1,
+   "same_number": 0
+  },
+  {
+   "category": "ic",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 2,
+   "same_number": 0
+  },
+  {
+   "category": "ic",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 8,
+   "same_number": 0
+  },
+  {
+   "category": "ic",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 1,
+   "same_number": 0
+  },
+  {
+   "category": "ib",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "ib",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "ib",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "ih",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "ih",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "ih",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "lpdag",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "lpdag",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "lpdag",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 0,
+   "same_number": 0
+  },
+  {
+   "category": "lpd",
+   "book": "cantarile-harului",
+   "our_songs": 37,
+   "matched": 6,
+   "same_number": 0
+  },
+  {
+   "category": "lpd",
+   "book": "cor",
+   "our_songs": 37,
+   "matched": 5,
+   "same_number": 0
+  },
+  {
+   "category": "lpd",
+   "book": "lauda-si-inchinare",
+   "our_songs": 33,
+   "matched": 1,
+   "same_number": 0
+  }
+ ]
+}

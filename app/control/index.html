@@ -1,0 +1,251 @@
+<!doctype html>
+<html data-ui="dark">
+<head>
+<meta charset="utf-8">
+<title>Scriptorium</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; img-src 'self' file: data: blob:; media-src 'self' file: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+<link rel="stylesheet" href="../shared/render.css">
+<link rel="stylesheet" href="control.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">Scriptorium</div>
+  <nav class="tabs" id="viewTabs">
+    <button data-view="songs" data-i18n="Songs">Songs</button>
+    <button data-view="bible" data-i18n="Bible">Bible</button>
+    <button data-view="settings" data-i18n="Settings">Settings</button>
+  </nav>
+  <div class="spacer"></div>
+  <button id="lyEdit" class="hbtn" data-i18n-title="Edit layout (move, resize, add or remove panels)"><span class="hi" data-icon="layout"></span><span data-i18n="Edit layout">Edit layout</span></button>
+  <button id="btnOutput" class="hbtn" data-i18n-title="Projector output on/off"><span class="hi" data-icon="monitor"></span><span id="outLabel">Projector off</span></button>
+  <div id="clock" class="clock">00:00:00</div>
+</header>
+
+<div id="lyBar" class="lybar hidden">
+  <div class="dd"><button id="lyAdd" class="btn sm" data-i18n="+ Add panel">+ Add panel</button><div id="lyMenu" class="menu hidden"></div></div>
+  <label class="check"><span data-i18n="Zones">Zones</span> <select id="lyZones"></select></label>
+  <button id="lySaveZones" class="btn sm ghost" data-i18n="Make zones from this layout">Make zones from this layout</button>
+  <label class="check"><input type="checkbox" id="lySnap"> <span data-i18n="Snap to grid &amp; zones">Snap to grid &amp; zones</span></label>
+  <select id="lyPresets" class="sm-select"></select>
+  <span class="muted small" data-i18n="Drag a panel by its title. Drag edges to resize. Drop a panel on another panel's title to make tabs; drag a tab out to detach it.">Drag a panel by its title. Drag edges to resize. Drop a panel on another panel's title to make tabs; drag a tab out to detach it.</span>
+  <div class="spacer"></div>
+  <button id="lyReset" class="btn sm ghost" data-i18n="Reset">Reset</button>
+  <button id="lyDone" class="btn sm" data-i18n="Done">Done</button>
+</div>
+
+<main id="ws"><div id="lyZoneLayer"></div></main>
+<div id="settingsView" class="settings hidden"></div>
+
+<!-- ======================= panel contents (moved into panels by layout.js) ======================= -->
+<div id="panelStore" class="hidden">
+
+  <div id="pc-songList" class="pcol">
+    <select id="songBook"></select>
+    <input id="songSearch" type="search" data-i18n-ph="Search songs… number, title or words" autocomplete="off">
+    <div id="songHint" class="muted small"></div>
+    <div id="songList" class="list"></div>
+    <div class="row gap">
+      <button id="songNew" class="btn sm" data-i18n="+ New song">+ New song</button>
+      <button id="songBooks" class="btn sm ghost" data-i18n="Song books…">Song books…</button>
+    </div>
+  </div>
+
+  <div id="pc-service" class="pcol">
+    <div class="row gap sv-bar">
+      <b id="svName" class="grow sv-name"></b>
+      <button id="svNew" class="btn sm ghost" data-i18n="New">New</button>
+      <div class="dd"><button id="svOpen" class="btn sm ghost" data-i18n="Open ▾">Open ▾</button><div id="svMenu" class="menu hidden"></div></div>
+      <button id="svSave" class="btn sm" data-i18n="Save">Save</button>
+    </div>
+    <div class="row gap">
+      <button id="svSaveAs" class="btn sm ghost" data-i18n="Save as…">Save as…</button>
+      <button id="svExport" class="btn sm ghost" data-i18n-title="Save the list as a file to share it" data-i18n="Export…">Export…</button>
+      <button id="svImport" class="btn sm ghost" data-i18n-title="Open a list file someone sent you" data-i18n="Import…">Import…</button>
+      <div class="spacer"></div>
+    </div>
+    <div class="muted small" data-i18n="Order of service. Ctrl+click a song (or use the button on a song) to add it. Double-click to show.">Order of service. Ctrl+click a song (or use the button on a song) to add it. Double-click to show.</div>
+    <div id="serviceList" class="list"></div>
+    <div class="row gap">
+      <button id="svUp" class="btn sm ghost" title="▲">▲</button>
+      <button id="svDown" class="btn sm ghost" title="▼">▼</button>
+      <button id="svRemove" class="btn sm ghost" data-i18n="Remove">Remove</button>
+      <div class="spacer"></div>
+      <button id="svClear" class="btn sm ghost danger" data-i18n="Clear">Clear</button>
+    </div>
+  </div>
+
+  <div id="pc-songSlides" class="pcol">
+    <div class="song-head">
+      <div class="grow"><div id="songTitle" class="h1" data-i18n="Select a song">Select a song</div><div id="songMeta" class="muted small"></div></div>
+      <button id="tbService" class="icon-btn" data-i18n-title="Add to service list"><span data-icon="addList"></span></button>
+      <button id="tbEdit" class="icon-btn" data-i18n-title="Edit song"><span data-icon="edit"></span></button>
+    </div>
+    <div id="slides" class="slides"></div>
+  </div>
+
+  <div id="pc-media" class="pcol">
+    <div class="player">
+      <div id="plNow" class="pl-now muted"></div>
+      <video id="plVideo" class="pl-video hidden" playsinline></video>
+      <div class="pl-time"><span id="plCur">00:00</span><input type="range" id="plSeek" min="0" max="1000" value="0"><span id="plDur">00:00</span></div>
+      <div class="pl-ctrls">
+        <button id="plPrev" data-i18n-title="Previous"><span data-icon="prev"></span></button>
+        <button id="plBack" data-i18n-title="Back 10 seconds"><span data-icon="back10"></span></button>
+        <button id="plPlay" class="main" data-i18n-title="Play / pause"><span data-icon="play"></span></button>
+        <button id="plStop" data-i18n-title="Stop"><span data-icon="stop"></span></button>
+        <button id="plFwd" data-i18n-title="Forward 10 seconds"><span data-icon="fwd10"></span></button>
+        <button id="plNext" data-i18n-title="Next"><span data-icon="next"></span></button>
+        <span class="tsep"></span>
+        <button id="plLoop" data-i18n-title="Repeat"><span data-icon="repeat"></span></button>
+        <button id="plShuffle" data-i18n-title="Shuffle"><span data-icon="shuffle"></span></button>
+        <button id="plMute" data-i18n-title="Mute"><span data-icon="vol"></span></button>
+        <input type="range" id="plVol" min="0" max="100" value="80">
+      </div>
+      <label class="check small"><input type="checkbox" id="plToProj"> <span data-i18n="Play videos on the projector">Play videos on the projector</span></label>
+    </div>
+    <div class="subtabs" id="mediaTabs">
+      <button data-mt="lib" class="on" data-i18n="Library">Library</button><button data-mt="pl" data-i18n="Playlist">Playlist</button><button data-mt="dl" data-i18n="Download">Download</button>
+    </div>
+    <div class="mt" id="mt-lib">
+      <div class="row gap">
+        <input id="mediaSearch" type="search" data-i18n-ph="Search media…" autocomplete="off">
+        <select id="mediaFilter" class="sm-select"><option value="" data-i18n="All">All</option><option value="audio" data-i18n="Audio">Audio</option><option value="video" data-i18n="Video">Video</option><option value="image" data-i18n="Images">Images</option></select>
+      </div>
+      <div id="mediaList" class="list"></div>
+      <div class="row gap">
+        <button id="mediaAdd" class="btn sm" data-i18n="+ Files">+ Files</button>
+        <button id="mediaAddFolder" class="btn sm ghost" data-i18n="+ Folder">+ Folder</button>
+        <button id="mediaOpenFolder" class="btn sm ghost" data-i18n="Open folder">Open folder</button>
+        <div class="spacer"></div>
+        <button id="mediaRemove" class="btn sm ghost danger" data-i18n="Remove">Remove</button>
+      </div>
+    </div>
+    <div class="mt hidden" id="mt-pl">
+      <div id="plList" class="list"></div>
+      <div class="row gap"><div class="spacer"></div><button id="plClear" class="btn sm ghost danger" data-i18n="Clear playlist">Clear playlist</button></div>
+    </div>
+    <div class="mt hidden" id="mt-dl">
+      <div id="dlTools" class="muted small"></div>
+      <div class="row gap"><input id="dlUrl" type="search" data-i18n-ph="Paste a YouTube (or other) link…" autocomplete="off"><button id="dlInfo" class="btn sm" data-i18n="Get">Get</button></div>
+      <label class="field"><span data-i18n="File name">File name</span><input id="dlName"></label>
+      <div class="row gap">
+        <div class="seg" id="dlKind"><button data-k="audio" class="on" data-i18n="Audio">Audio</button><button data-k="video" data-i18n="Video">Video</button></div>
+        <select id="dlFormat" class="sm-select"></select>
+        <select id="dlQuality" class="sm-select"></select>
+        <select id="dlRate" class="sm-select"></select>
+      </div>
+      <div class="row gap"><button id="dlGo" class="btn" data-i18n="Download">Download</button><div class="spacer"></div><button id="dlCancel" class="btn sm ghost hidden" data-i18n="Cancel">Cancel</button></div>
+      <div class="progress"><div id="dlBar"></div></div>
+      <div id="dlStatus" class="muted small"></div>
+    </div>
+  </div>
+
+  <div id="pc-live" class="pcol">
+    <div class="live-head"><span class="dot" id="liveDot"></span><b data-i18n="LIVE">LIVE</b><span id="frozenTag" class="tag-frozen hidden" data-i18n="FROZEN">FROZEN</span><span class="spacer"></span><span id="liveLabel" class="muted small"></span></div>
+    <div id="preview" class="preview"></div>
+    <div id="nextLine" class="next-line muted small"></div>
+    <div class="live-btns">
+      <button id="btnShow" class="btn big" data-i18n-title="Put the selection on screen"><span data-i18n="Show">Show</span></button>
+      <button id="btnHide" class="btn big ghost" data-i18n-title="Take the text off the screen"><span data-i18n="Hide">Hide</span></button>
+      <button id="btnFreeze" class="btn big ghost" data-i18n-title="Freeze what is on the projector"><span data-icon="freeze"></span> <span data-i18n="Freeze">Freeze</span></button>
+    </div>
+  </div>
+
+  <div id="pc-songHistory" class="pcol"><div id="songHistory" class="list"></div></div>
+  <div id="pc-themes" class="pcol strip"><div id="themeStrip"></div></div>
+
+  <div id="pc-bibleBooks" class="pcol">
+    <div class="locate"><span data-icon="search"></span><input id="bibleRef" type="search" data-i18n-ph="Type a book, chapter, verse… (e.g. ioan 3 16)" autocomplete="off"></div>
+    <div id="bookGrid" class="bookgrid"></div>
+  </div>
+  <div id="pc-bibleChapters" class="pcol"><div id="chapHead" class="muted small"></div><div id="chapGrid" class="numgrid"></div></div>
+  <div id="pc-bibleVerses" class="pcol"><div id="verseHead" class="muted small"></div><div id="verseGrid" class="numgrid light"></div></div>
+  <div id="pc-bibleText" class="pcol">
+    <div class="chap-head">
+      <div id="chapTitle" class="h1">—</div>
+      <div class="spacer"></div>
+      <button id="bFav" class="icon-btn" data-i18n-title="Add the selected verses to favorites"><span data-icon="star"></span></button>
+    </div>
+    <div class="vers-ctl">
+      <span class="muted small" data-i18n="List">List</span><button class="vt" data-set="list" data-v="vdc">VDC</button><button class="vt" data-set="list" data-v="bsb">BSB</button>
+      <span class="vsep"></span>
+      <span class="muted small" data-i18n="Screen">Screen</span><button class="vt" data-set="screen" data-v="vdc">VDC</button><button class="vt" data-set="screen" data-v="bsb">BSB</button>
+    </div>
+    <div id="verseList" class="verse-list"></div>
+  </div>
+  <div id="pc-bibleSearch" class="pcol">
+    <input id="bibleSearch" type="search" data-i18n-ph="Search words or a topic… (Ctrl+F)" autocomplete="off">
+    <div class="row gap small"><select id="bsScope" class="sm-select"><option value="all" data-i18n="Whole Bible">Whole Bible</option><option value="ot" data-i18n="Old Testament">Old Testament</option><option value="nt" data-i18n="New Testament">New Testament</option><option value="book" data-i18n="Current book">Current book</option></select><select id="bsLang" class="sm-select"><option value="both">VDC + BSB</option><option value="vdc">VDC</option><option value="bsb">BSB</option></select></div>
+    <div id="bsHint" class="muted small"></div>
+    <div id="bsResults" class="list"></div>
+  </div>
+  <div id="pc-bibleFavorites" class="pcol"><div id="favList" class="list"></div></div>
+  <div id="pc-bibleHistory" class="pcol">
+    <select id="histMode" class="sm-select"><option value="both" data-i18n="Reference + verse">Reference + verse</option><option value="ref" data-i18n="Reference only">Reference only</option><option value="text" data-i18n="Verse only">Verse only</option></select>
+    <div id="bibleHistory" class="list"></div>
+  </div>
+</div>
+
+<!-- song editor -->
+<div id="modal" class="modal hidden">
+  <div class="dialog wide">
+    <div class="row gap"><div class="h1 grow" id="edTitle">Edit song</div><span class="muted small" data-i18n="Tip: paste a whole song into Lyrics – it is formatted automatically.">Tip: paste a whole song into Lyrics – it is formatted automatically.</span></div>
+    <div class="form cols4">
+      <label><span data-i18n="Song book">Song book</span> <select id="edBook"></select></label>
+      <label><span data-i18n="Number">Number</span> <input id="edNumber" type="number" min="0"></label>
+      <label><span data-i18n="Key / chord">Key / chord</span> <input id="edKey" data-i18n-ph="e.g. G, Am, Sol, La minor"></label>
+      <label><span data-i18n="Title">Title</span> <input id="edName"></label>
+    </div>
+    <label class="field"><span><span data-i18n="Lyrics">Lyrics</span> <span class="muted small" data-i18n="— an empty line starts a new slide. [R] marks a chorus, [R2] a second, different chorus.">— an empty line starts a new slide. [R] marks a chorus, [R2] a second, different chorus.</span></span>
+      <textarea id="edText" spellcheck="false"></textarea></label>
+    <div class="row gap"><button id="edFormat" class="btn sm ghost" data-i18n="Auto-format">Auto-format</button><span id="edDetect" class="muted small"></span></div>
+    <label class="field"><span data-i18n="Info / notes">Info / notes</span><input id="edInfo"></label>
+    <div class="row gap end">
+      <button id="edDelete" class="btn ghost danger" data-i18n="Delete song">Delete song</button>
+      <div class="spacer"></div>
+      <button id="edCancel" class="btn ghost" data-i18n="Cancel">Cancel</button>
+      <button id="edSave" class="btn" data-i18n="Save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- song book manager -->
+<div id="booksModal" class="modal hidden">
+  <div class="dialog">
+    <div class="h1" data-i18n="Song books">Song books</div>
+    <div class="muted small" data-i18n="Rename books, create a new empty book, import songs, export a book, or delete a book (a .deleted copy is kept).">Rename books, create a new empty book, import songs, export a book, or delete a book (a .deleted copy is kept).</div>
+    <div id="booksTable" class="books-table"></div>
+    <div class="row gap end">
+      <button id="bkNew" class="btn" data-i18n="+ New book">+ New book</button>
+      <button id="bkImport" class="btn ghost" data-i18n="Import…">Import…</button>
+      <button id="bkFolder" class="btn ghost" data-i18n="Open songs folder">Open songs folder</button>
+      <div class="spacer"></div>
+      <button id="bkClose" class="btn" data-i18n="Done">Done</button>
+    </div>
+    <div class="muted small" data-i18n="Import supports: SoftProjector (.sps), OpenLP (songs.sqlite), OpenLyrics / OpenSong (.xml), ChordPro (.cho, .chordpro, .pro), CSV, plain text (.txt) and Scriptorium books (.json).">Import supports: SoftProjector (.sps), OpenLP (songs.sqlite), OpenLyrics / OpenSong (.xml), ChordPro (.cho, .chordpro, .pro), CSV, plain text (.txt) and Scriptorium books (.json).</div>
+  </div>
+</div>
+
+<!-- generic question -->
+<div id="askModal" class="modal hidden">
+  <div class="dialog small-dialog">
+    <div id="askText" class="h1"></div>
+    <input id="askInput">
+    <div class="row gap end"><div class="spacer"></div><button id="askCancel" class="btn ghost" data-i18n="Cancel">Cancel</button><button id="askOk" class="btn" data-i18n="OK">OK</button></div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="../shared/render.js"></script>
+<script src="i18n.js"></script>
+<script src="util.js"></script>
+<script src="topics.js"></script>
+<script src="layout.js"></script>
+<script src="app.js"></script>
+<script src="songs.js"></script>
+<script src="service.js"></script>
+<script src="bible.js"></script>
+<script src="media.js"></script>
+<script src="settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+{
+"id": "imnurile-harului",
+"name": "Imnurile Harului",
+"short": "IH",
+"description": "Imnurile Harului – importat de pe cantaricrestine.ro (categoria „ih”).",
+"dataVersion": 4,
+"songs": [
+{
+"number": 1,
+"title": "Drag prieten, care cînți",
+"sections": [
+{
+"type": "verse",
+"text": "Drag prieten, care cînți\nVesel în credință\nFii prieten tu cu Isus\nȘi la suferință\nDacă-n ceasul de temut\nVrei să fii la dreapta\nCînd Isus e trist,\nTăcut, mîngîie-l cu fapta."
+},
+{
+"type": "verse",
+"text": "Dă-i acum din pîinea ta,\nFoamea să-și destrame\nCăci în cer, în veci de veci,\nNu-i va mai fi foame\nDă-i acum din stropii reci,\nSetea să-și aline\nCăci așa prilej în veci,\nȚie nu-ți mai vine."
+},
+{
+"type": "verse",
+"text": "Dă-i acuma haina ta,\nCînd e rupt veșmîntul\nCăci în cer, în veci de veci,\nNu-l va bate vîntul\nDă-i acuma la bolnav,\nMîngîierea toată\nCăci bolnav nu va mai fi\nDomnul niciodată."
+},
+{
+"type": "verse",
+"text": "Ia-i acum în casa ta,\nSă-și aline somnul\nAzi e un sărac pe drum,\nMîine va fi Domnul\nAzi El rabdă-n mii de frați,\nAzi îți vrea El fapta\nMîine cînd vom fi chemați, Tu vei fi la dreapta?"
+},
+{
+"type": "verse",
+"text": "Căci un Glas vom auzi,\nVom zbura spre stele:\n“Îl cunosc din anii buni\nȘi din zile grele”\nIată anii trec se duc,\nZilele-s ca spuma\nFii tu prieten cu Isus,\nNu uita, acuma."
+}
+]
+},
+{
+"number": 2,
+"title": "Pe-altarul sfînt jertfim",
+"sections": [
+{
+"type": "verse",
+"text": "Pe-altarul\nSfînt jertfim credința\nViața-ntreagă ne-ncetat;\nPurtăm nădejdea-n\nBiruința și-al Domnului\nCuvînt curat."
+},
+{
+"type": "chorus",
+"text": "//: Cîntăm, cîntăm\nȘi ne rugăm ://\nMărire Ție!\n//: O, Doamne-n veci :// Mărire Ție!"
+},
+{
+"type": "verse",
+"text": "Pe altarul\nSfînt jertfim credința\nDe-a pururi\nVom pași mereu\nCu inimi nevinovate\nSă preamprim\nPe Dumnezeu."
+},
+{
+"type": "verse",
+"text": "Pe altarul\nSfînt jertfim credința,\nIubirea noastră\nNe-ncetat;\nȘi vom intra\nCu Domnu-n slavă\nUnde toți sfinții au intrat."
+}
+]
+},
+{
+"number": 3,
+"title": "Poporașul meu",
+"sections": [
+{
+"type": "verse",
+"text": "//: Poporașul meu,\nPoporașul meu\nTrezește-te! ://\n//: Trezește-te nu dormi!\nIată, iată, vine Mirele! ://"
+},
+{
+"type": "verse",
+"text": "//: Ia-ți haina curată,\nDuhul cel din slavă,\nDuhul Sfînt. ://\n//: Căci de mult\nEu tot aștept\nA Mea nuntă\nCa să o încep. ://"
+},
+{
+"type": "verse",
+"text": "//: Și-am să stau,\nLa masă,\nCu a mea Mireasă,\nSus în cer ://\n//: Și-am să-i cînt\nDin harfe vii\nCele mai frumoase\nMelodii. ://"
+},
+{
+"type": "verse",
+"text": "//: Oastea cea\nDin cer va’ntreba\nPe Miel de unde vii://\n//: Mielul\nLe va spune-așa\nVin de pe pămînt\nDin necaz. ://"
+},
+{
+"type": "verse",
+"text": "//: Vin de pe pămînt\nDe unde am suferit\nPentru acest loc ://\n//: Dar acum s-a terminat\nCăci ei hainele\nȘi le-au spalat. ://"
+}
+]
+}
+]
+}
