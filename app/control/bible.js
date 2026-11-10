@@ -42,9 +42,10 @@ const Bible = {
     loc.insertAdjacentHTML('beforeend', `<div class="seg" id="nameLang"><button data-l="ro">RO</button><button data-l="en">EN</button></div><button class="icon-btn" id="bkStyle" title="${t('Tiles / list')}">${icon('list')}</button><span class="seg bk-size" title="${t('Book tile size')}"><button id="bkSmaller">−</button><button id="bkFit">${t('Fit')}</button><button id="bkBigger">+</button></span>`);
     $$('#nameLang button').forEach(btn => btn.onclick = () => { this.cfg().names = btn.dataset.l; App.save(); this.renderBooks(); this.updateTitles(); this.renderVerseList(); });
     $('#bkStyle').onclick = () => { this.cfg().bookStyle = this.cfg().bookStyle === 'list' ? 'groups' : 'list'; App.save(); this.renderBooks(); };
-    const size = d => { const c = this.cfg(); const cur = c.bookSize === 'fit' || c.bookSize == null ? (this.fitScale || 1) : c.bookSize; c.bookSize = Math.round(Math.max(0.5, Math.min(3, cur * (d > 0 ? 1.15 : 1 / 1.15))) * 100) / 100; App.save(); this.sizeBooks(); };
+    // + = bigger boxes (fewer columns), − = smaller boxes (more columns)
+    const size = d => { const c = this.cfg(); c.bookCols = Math.max(3, Math.min(22, (this.cols || 11) + (d > 0 ? -1 : 1))); App.save(); this.sizeBooks(); };
     $('#bkSmaller').onclick = () => size(-0.1); $('#bkBigger').onclick = () => size(0.1);
-    $('#bkFit').onclick = () => { this.cfg().bookSize = 'fit'; App.save(); this.sizeBooks(); };
+    $('#bkFit').onclick = () => { this.cfg().bookCols = 'fit'; App.save(); this.sizeBooks(); };
     new ResizeObserver(debounce(() => this.sizeBooks(), 60)).observe($('#bookGrid'));
     const ref = $('#bibleRef');
     ref.addEventListener('keydown', e => {
@@ -126,56 +127,43 @@ const Bible = {
   // ---------- books panel ----------
   renderBooks() {
     const L = this.lang(), ab = L === 'en' ? this.TILE_EN : this.TILE_RO;
-    const box = $('#bookGrid');
-    box.classList.toggle('list-style', this.cfg().bookStyle === 'list');
-    box.innerHTML = this.GROUPS.map(T => `<div class="bk-testament"><div class="bk-tt">${t(T.t)}</div><div class="bk-groups">${T.g.map(([gn, a, z, c]) =>
-      `<div class="bk-group" data-n="${z - a + 1}"><div class="bk-gname">${t(gn)}</div><div class="bk-row">${Array.from({ length: z - a + 1 }, (_, k) => a + k).map(i =>
-        `<div class="bk${i === this.book ? ' sel' : ''}" data-b="${i}" style="--c:${c}" title="${esc(this.bookName(i, 'ro'))} · ${esc(this.bookName(i, 'en'))}"><span class="ab">${esc(ab[i])}</span><span class="nm">${esc(this.bookName(i, L))}</span><span class="cc">${this.chapters(i)}</span></div>`).join('')}</div></div>`).join('')}</div></div>`).join('');
+    const box = $('#bookGrid'), list = this.cfg().bookStyle === 'list';
+    const tile = i => `<div class="bk${i === this.book ? ' sel' : ''}" data-b="${i}" style="--c:${this.color(i)}" title="${esc(this.bookName(i, 'ro'))} · ${esc(this.bookName(i, 'en'))}"><span class="ab">${esc(ab[i])}</span><span class="nm">${esc(this.bookName(i, L))}</span><span class="cc">${this.chapters(i)}</span></div>`;
+    box.classList.toggle('list-style', list);
+    box.classList.toggle('flat', !list);
+    if (list) {   // compact list, grouped by section
+      box.innerHTML = this.GROUPS.map(T => `<div class="bk-testament"><div class="bk-tt">${t(T.t)}</div><div class="bk-groups">${T.g.map(([gn, a, z]) =>
+        `<div class="bk-group"><div class="bk-gname">${t(gn)}</div><div class="bk-row">${Array.from({ length: z - a + 1 }, (_, k) => tile(a + k)).join('')}</div></div>`).join('')}</div></div>`).join('');
+    } else {      // Holyrics-style: all 66 books next to each other, sections told apart by color
+      box.innerHTML = Array.from({ length: 66 }, (_, i) => tile(i)).join('');
+    }
     $$('#bookGrid .bk').forEach(el => el.onclick = () => { this.goto(+el.dataset.b, 1); $('#bibleRef').value = ''; this.onLocate(); });
     $$('#nameLang button').forEach(b => b.classList.toggle('on', b.dataset.l === L));
     this.sizeBooks();
   },
-  // book tiles: "fit" grows/shrinks them to fill the panel; otherwise a fixed size (−/+)
-  // All tiles share one column grid. "Fit" picks the fewest columns (= biggest tiles) that still fit
-  // the panel without scrolling; −/+ set a fixed tile size instead.
+  // Tiles fill the whole panel. "Fit" chooses the number of columns that gives the biggest boxes;
+  // − / + use more / fewer columns. Text size follows the box size.
   sizeBooks() {
     const g = $('#bookGrid'); if (!g || !g.offsetParent) return;
-    const c = this.cfg(), fit = c.bookSize == null || c.bookSize === 'fit';
+    const c = this.cfg(), fit = c.bookCols == null || c.bookCols === 'fit';
     if ($('#bkFit')) $('#bkFit').classList.toggle('on', fit);
-    g.classList.toggle('fit', fit);
-    const base = parseFloat(getComputedStyle(g.parentElement).fontSize) || 14;
-    const W = g.clientWidth - 4;
-    const apply = cols => {
-      const tile = W / cols;
-      g.style.setProperty('--bkmin', 'auto');
-      g.style.setProperty('--cols', cols);
-      g.style.setProperty('--bks', Math.max(0.42, Math.min(3, tile / (6.4 * base))).toFixed(3));
-      $$('.bk-group', g).forEach(el => el.style.setProperty('--span', Math.min(+el.dataset.n, cols)));
+    if (g.classList.contains('list-style')) { g.style.removeProperty('--bkf'); return; }
+    const W = g.clientWidth, H = g.clientHeight, gap = 4, n = 66;
+    if (!W || !H) return;
+    const measure = cols => {
+      const rows = Math.ceil(n / cols);
+      const tw = (W - gap * (cols - 1)) / cols, th = (H - gap * (rows - 1)) / rows;
+      return { cols, rows, tw, th, score: Math.min(tw / 1.7, th) };
     };
-    if (g.classList.contains('list-style')) { g.style.setProperty('--bks', fit ? 1 : c.bookSize); return; }
-    if (!fit) { apply(Math.max(3, Math.round(W / (6.4 * base * c.bookSize)))); this.fitScale = c.bookSize; return; }
-    let chosen = 24;
-    for (let cols = 4; cols <= 24; cols++) {
-      apply(cols);
-      if (g.scrollHeight <= g.clientHeight + 1) { chosen = cols; break; }
-    }
-    apply(chosen);
-    // use the space that is left: first bigger text (while the abbreviations still fit the tile width) …
-    const fits = () => g.scrollHeight <= g.clientHeight + 1;
-    let lo = parseFloat(g.style.getPropertyValue('--bks')), hi = Math.min(3, (W / chosen) / (4.2 * base));
-    for (let i = 0; i < 10 && hi > lo; i++) {
-      const mid = (lo + hi) / 2;
-      g.style.setProperty('--bks', mid.toFixed(3));
-      if (fits()) lo = mid; else hi = mid;
-    }
-    g.style.setProperty('--bks', lo.toFixed(3));
-    // … then taller tiles, sharing the remaining height between the rows of tiles
-    const tiles = $$('.bk', g);
-    const rows = new Set(tiles.map(el => el.offsetTop)).size || 1;
-    const extra = g.clientHeight - g.scrollHeight;
-    if (extra > rows && tiles.length) g.style.setProperty('--bkmin', (tiles[0].offsetHeight + Math.floor(extra / rows) - 1) + 'px');
-    if (!fits()) g.style.setProperty('--bkmin', 'auto');
-    this.fitScale = lo;
+    let m;
+    if (fit) { for (let cols = 5; cols <= 16; cols++) { const x = measure(cols); if (!m || x.score > m.score) m = x; } }
+    else m = measure(Math.max(3, Math.min(22, +c.bookCols)));
+    this.cols = m.cols;
+    g.style.setProperty('--cols', m.cols);
+    g.style.setProperty('--rows', m.rows);
+    const f = Math.max(8, Math.min(m.th * 0.3, m.tw * 0.2, 30));
+    g.style.setProperty('--bkf', f.toFixed(1) + 'px');
+    g.classList.toggle('tiny', m.th < 34 || m.tw < 58);
   },
   onLocate() {
     const v = $('#bibleRef').value;

@@ -161,6 +161,11 @@ The counts are in `cantaricrestine-summary.json`. Re-run everything with `python
   - The window can be as small as 760×480; it used to be at least 1100×680, which didn't fit small laptops.
   - Dialogs scroll instead of running off the screen.
   - Tested by screenshot at 1024×640, 1093×614, 1280×720, 1366×768, 1536×864 and 1920×1080: nothing overlaps, and all 66 books fit.
+- **0.4.5 – books like Holyrics.** All 66 books sit next to each other in one grid, in Bible order, told apart by color. The boxes keep the same style and always fill the Books panel, so no row is cut off.
+  - **Fit** picks the number of columns that gives the biggest boxes; **+** makes them bigger (fewer columns), **−** smaller.
+  - On very small panels only the abbreviation is shown.
+  - The ≡ button still switches to a compact list grouped by section.
+- **0.4.5 – service list on laptops.** The list name has its own line and the buttons wrap onto two rows, so none are hidden. **Open ▾** opens inside the window.
 - **0.4.4 – delete saved lists.** **Delete list** removes the saved copy of the open list, and each entry in **Open ▾** has its own **Delete** button.
 - Song data is now version 4 (16 books, 4,550 songs). Books you haven't edited update on the next start.
 

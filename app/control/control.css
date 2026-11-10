@@ -295,4 +295,16 @@ input[type=range] { accent-color: var(--accent); }
 ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; }
 
 .sv-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: .95em; }
-.sv-bar .dd .menu { right: 0; left: auto; min-width: 260px; }
+.sv-bar { display: flex; flex-wrap: wrap; gap: 4px; flex: none; }
+.sv-bar .btn { flex: none; }
+.sv-bar .dd .menu { left: 0; right: auto; min-width: 240px; max-width: min(420px, 80vw); }
+.sv-name { flex: none; }
+
+/* Holyrics-style book grid: all 66 books next to each other, filling the panel */
+.bookgrid.flat { display: grid; overflow: hidden; gap: 4px; padding: 0; font-size: var(--bkf, 14px);
+  grid-template-columns: repeat(var(--cols, 11), minmax(0, 1fr)); grid-template-rows: repeat(var(--rows, 6), minmax(0, 1fr)); }
+.bookgrid.flat .bk { min-width: 0; min-height: 0; padding: .25em .4em .25em .65em; justify-content: center; overflow: hidden; border-radius: 6px; }
+.bookgrid.flat .bk .ab { font-size: 1.35em; line-height: 1.05; white-space: nowrap; }
+.bookgrid.flat .bk .nm { font-size: .62em; margin-top: .15em; }
+.bookgrid.flat .bk .cc { font-size: .55em; right: .45em; top: .3em; }
+.bookgrid.flat.tiny .bk .nm, .bookgrid.flat.tiny .bk .cc { display: none; }

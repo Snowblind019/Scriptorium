@@ -26,13 +26,15 @@ module.exports = async function selftest(getWins, outDir) {
     await run(`(async()=>{ const x=Songs.find('cantarile-evangheliei',528); Songs.open(x); Songs.showSlide(1); App.setView('bible'); Bible.goto(42,3); Bible.sel={from:16,to:16}; Bible.project(); return 1 })()`);
     for (const sz of process.env.SCRIPTORIUM_SIZES.split(',')) {
       const [W, H] = sz.split('x').map(Number);
-      w.unmaximize(); w.setMinimumSize(800, 500); w.setContentSize(W, H); await wait(900);
+      for (let k = 0; k < 3 && (w.getContentSize()[0] !== W || w.getContentSize()[1] !== H); k++) { w.unmaximize(); await wait(300); w.setMinimumSize(700, 450); w.setContentSize(W, H); await wait(700); }
       await run(`[innerWidth, innerHeight, 'zoom', api.getZoom().toFixed(2), 'books overflow', document.querySelector('#bookGrid').scrollHeight > document.querySelector('#bookGrid').clientHeight + 1].join(' ')`);
       for (const v of ['songs', 'bible', 'settings']) {
         await run(`App.setView('${v}'); 1`);
         await wait(700);
         await shot(`size-${W}x${H}-${v}`);
       }
+      await run(`(async()=>{ App.setView('songs'); Layout.show('service'); Service.addSong(Songs.find('cantarile-evangheliei',1)); Service.addSong(Songs.find('cantarile-evangheliei',3)); Service.meta().name='Program 2026-11-10'; await Service.save(false); await Service.toggleMenu(); return 1 })()`); await wait(500); await shot(`size-${W}x${H}-service`);
+      await run(`document.querySelector('#svMenu').classList.add('hidden'); Layout.show('songList'); 1`);
       await run(`App.setView('songs'); Songs.edit(Songs.current); 1`); await wait(400); await shot(`size-${W}x${H}-editor`);
       await run(`Songs.closeEditor(); Layout.setEditing(true); 1`); await wait(400); await shot(`size-${W}x${H}-editlayout`);
       await run(`Layout.setEditing(false); 1`);
@@ -85,7 +87,7 @@ module.exports = async function selftest(getWins, outDir) {
   await run(`Bible.step(1); App.live.label`);
   await run(`App.settings.bible.screen.showTag=false; Bible.project(Bible.liveRef,{quiet:true}); const rt=App.live.content.blocks.map(b=>b.ref).join(' | '); App.settings.bible.screen.showTag=true; rt + ' (tags off)'`);
   await run(`const l=App.live.label; Bible.selStep(1); Bible.selStep(1); Bible.selStep(1); const l2=App.live.label; App.nav.bible.show(); [l,l2,App.live.label].join(' | ') + ' (before, after →→→, after Enter)'`);
-  await run(`App.setView('bible'); Bible.sizeBooks(); getComputedStyle(document.querySelector('#bookGrid')).getPropertyValue('--bks') + ' fit scale; overflow=' + (document.querySelector('#bookGrid').scrollHeight > document.querySelector('#bookGrid').clientHeight + 1)`);
+  await run(`App.setView('bible'); Bible.sizeBooks(); getComputedStyle(document.querySelector('#bookGrid')).getPropertyValue('--cols') + ' columns; overflow=' + (document.querySelector('#bookGrid').scrollHeight > document.querySelector('#bookGrid').clientHeight + 1)`);
   await run(`document.querySelector('#bibleRef').value='geneza'; Bible.onLocate(); Bible.book`);
   await run(`Bible.goto(42,3); Bible.sel={from:16,to:16}; Bible.addFavorite(); App.settings.bible.favorites.length`);
   await run(`document.querySelector('#bibleSearch').value='duhul sfint'; Bible.search(); document.querySelector('#bsHint').textContent`);

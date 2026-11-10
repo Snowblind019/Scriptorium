@@ -1,7 +1,7 @@
 {
   "name": "scriptorium",
   "productName": "Scriptorium",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Bible & song projection for church (VDC 1924 / BSB, C\u00eent\u0103rile Evangheliei and more)",
   "author": "Scriptorium",
   "main": "main.js",
