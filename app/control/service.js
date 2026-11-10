@@ -17,6 +17,7 @@ const Service = {
     $('#svOpen').onclick = () => this.toggleMenu();
     $('#svExport').onclick = () => this.exportFile();
     $('#svImport').onclick = () => this.importFile();
+    $('#svDelete').onclick = () => this.deleteCurrent();
     this.render();
   },
   list() { return App.settings.serviceList; },
@@ -49,6 +50,7 @@ const Service = {
     const l = this.list(), m = this.meta();
     $('#svName').textContent = (m.name || t('Unsaved list')) + (m.dirty && l.length ? ' •' : '');
     $('#svName').title = m.dirty ? t('Changes not saved') : '';
+    $('#svDelete').disabled = !m.name;
     box.innerHTML = l.length ? l.map((it, i) => {
       const missing = it.type === 'song' && !Songs.find(it.bookId, it.number, it.title);
       const tag = missing ? (it.song ? `<span class="tag">${t('from file')}</span>` : `<span class="tag">${t('missing')}</span>`) : '';
@@ -123,7 +125,7 @@ const Service = {
     const m = $('#svMenu');
     if (!m.classList.contains('hidden')) { m.classList.add('hidden'); return; }
     const lists = await api.listsAll();
-    m.innerHTML = lists.length ? lists.map((l, i) => `<div class="item" data-i="${i}"><span class="ttl">${esc(l.name)}<span class="snip">${l.count} · ${new Date(l.modified).toLocaleDateString()}</span></span><span class="act" style="display:inline-flex"><button data-x="1" title="${t('Delete')}">${icon('close')}</button></span></div>`).join('')
+    m.innerHTML = lists.length ? lists.map((l, i) => `<div class="item" data-i="${i}"><span class="ttl">${esc(l.name)}<span class="snip">${l.count} · ${new Date(l.modified).toLocaleDateString()}</span></span><button class="btn sm ghost danger" data-x="1">${t('Delete')}</button></div>`).join('')
       : `<div class="empty">${t('No saved lists yet. Use Save to keep this list.')}</div>`;
     m.classList.remove('hidden');
     $$('.item', m).forEach(el => el.onclick = async e => {
@@ -136,6 +138,16 @@ const Service = {
       if (!this.okToReplace()) return;
       try { this.load(await api.listLoad(l.file)); toast(t('Opened') + ': ' + l.name); } catch (err) { toast(err.message); }
     });
+  },
+  // delete the saved copy of the list that is open (the songs stay on screen as an unsaved list)
+  async deleteCurrent() {
+    const name = this.meta().name;
+    const l = name && (await api.listsAll()).find(x => x.name === name);
+    if (!l) { toast(t('This list is not saved – use Clear to empty it, or Open ▾ to delete a saved list')); return; }
+    if (!confirm(t('Delete the saved list?') + '\n' + name)) return;
+    await api.listDelete(l.file);
+    Object.assign(this.meta(), { name: '', dirty: true }); App.save(); this.render();
+    toast(t('Deleted') + ': ' + name);
   },
   async exportFile() {
     if (!this.list().length) { toast(t('The list is empty')); return; }

@@ -21,6 +21,25 @@ module.exports = async function selftest(getWins, outDir) {
   };
   getWins().controlWin.webContents.on('console-message', (e) => { if (e.level === 'error' || e.level === 'warning') log.push(['console', e.level, e.message, e.lineNumber, e.sourceId]); });
   await wait(5000);
+  if (process.env.SCRIPTORIUM_SIZES) {   // screenshots at laptop sizes: SCRIPTORIUM_SIZES=1280x720,1366x768
+    const w = getWins().controlWin;
+    await run(`(async()=>{ const x=Songs.find('cantarile-evangheliei',528); Songs.open(x); Songs.showSlide(1); App.setView('bible'); Bible.goto(42,3); Bible.sel={from:16,to:16}; Bible.project(); return 1 })()`);
+    for (const sz of process.env.SCRIPTORIUM_SIZES.split(',')) {
+      const [W, H] = sz.split('x').map(Number);
+      w.unmaximize(); w.setMinimumSize(800, 500); w.setContentSize(W, H); await wait(900);
+      await run(`[innerWidth, innerHeight, 'zoom', api.getZoom().toFixed(2), 'books overflow', document.querySelector('#bookGrid').scrollHeight > document.querySelector('#bookGrid').clientHeight + 1].join(' ')`);
+      for (const v of ['songs', 'bible', 'settings']) {
+        await run(`App.setView('${v}'); 1`);
+        await wait(700);
+        await shot(`size-${W}x${H}-${v}`);
+      }
+      await run(`App.setView('songs'); Songs.edit(Songs.current); 1`); await wait(400); await shot(`size-${W}x${H}-editor`);
+      await run(`Songs.closeEditor(); Layout.setEditing(true); 1`); await wait(400); await shot(`size-${W}x${H}-editlayout`);
+      await run(`Layout.setEditing(false); 1`);
+    }
+    fs.writeFileSync(path.join(outDir, 'log.json'), JSON.stringify(log, null, 1));
+    return;
+  }
   if (process.env.SCRIPTORIUM_LANGTEST) {   // switch the interface language the way a user does
     await run(`{ App.setView('settings'); Settings.show('general'); const s=document.querySelector('[data-b="app:lang"]'); s.value='ro'; s.dispatchEvent(new Event('change')); } App.setView('songs'); 'switched'`);
     await wait(5000);
@@ -83,6 +102,7 @@ module.exports = async function selftest(getWins, outDir) {
   // service lists: save / new / open / share with a song the other computer doesn't have
   await run(`(async()=>{ App.settings.serviceList=[]; Service.addSong(Songs.find('cantarile-evangheliei',1)); Service.addSong(Songs.find('cor',2)); Service.meta().name='Test Sunday'; await Service.save(false); Service.newList(); const a=Service.list().length; const lists=await api.listsAll(); Service.load(await api.listLoad(lists[0].file)); return [a, lists.map(l=>l.name+':'+l.count).join(','), Service.list().length, Service.meta().name].join(' | '); })()`);
   await run(`(() => { const snap=Service.snapshot('Shared'); snap.items.push({type:'song', bookId:'not-here', bookName:'Other book', number:7, title:'Cîntare doar în fișier', song:{number:7,title:'Cîntare doar în fișier',sections:[{type:'verse',text:'Prima strofă\\na doua linie'}]}}); Service.load(snap); Service.open(Service.list()[2], true); return [document.querySelector('#serviceList').textContent.includes('from file'), App.live.content && App.live.content.text].join(' | '); })()`);
+  await run(`(async()=>{ await Service.toggleMenu(); const btn=[...document.querySelectorAll('#svMenu button[data-x]')].map(b=>b.textContent); document.querySelector('#svMenu').classList.add('hidden'); const before=(await api.listsAll()).length; const l=await api.listsAll(); await api.listDelete(l[0].file); return [btn.join(','), before, (await api.listsAll()).length, document.querySelector('#svDelete').textContent].join(' | '); })()`);
   await run(`App.setView('bible'); Layout.setEditing(true); Layout.toggleFloat('bibleFavorites'); Layout.rects().bibleFavorites.float`);
   await wait(500);
   await shot('03-edit-layout');

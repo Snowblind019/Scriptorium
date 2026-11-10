@@ -149,7 +149,7 @@ const Bible = {
       const tile = W / cols;
       g.style.setProperty('--bkmin', 'auto');
       g.style.setProperty('--cols', cols);
-      g.style.setProperty('--bks', Math.max(0.55, Math.min(3, tile / (6.4 * base))).toFixed(3));
+      g.style.setProperty('--bks', Math.max(0.42, Math.min(3, tile / (6.4 * base))).toFixed(3));
       $$('.bk-group', g).forEach(el => el.style.setProperty('--span', Math.min(+el.dataset.n, cols)));
     };
     if (g.classList.contains('list-style')) { g.style.setProperty('--bks', fit ? 1 : c.bookSize); return; }

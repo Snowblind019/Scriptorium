@@ -156,6 +156,12 @@ The counts are in `cantaricrestine-summary.json`. Re-run everything with `python
   - The file carries the full text of every song. If the other computer doesn't have a song (or has different numbering), it is found by title or shown from the file, marked "from file".
   - Bible passages in a list work everywhere. Media items only work if the same file exists on that computer.
   - Saved lists are in `%APPDATA%\Scriptorium\lists\`.
+- **0.4.4 – laptop screens.**
+  - The whole interface now scales to fit smaller screens: **Settings → Program appearance → Program size: Automatic** (default), or a fixed 70–140%. For example, a 1366×768 laptop at 125% Windows scaling gets 74%, and 1280×720 gets 86%.
+  - The window can be as small as 760×480; it used to be at least 1100×680, which didn't fit small laptops.
+  - Dialogs scroll instead of running off the screen.
+  - Tested by screenshot at 1024×640, 1093×614, 1280×720, 1366×768, 1536×864 and 1920×1080: nothing overlaps, and all 66 books fit.
+- **0.4.4 – delete saved lists.** **Delete list** removes the saved copy of the open list, and each entry in **Open ▾** has its own **Delete** button.
 - Song data is now version 4 (16 books, 4,550 songs). Books you haven't edited update on the next start.
 
 ## Not done / limits

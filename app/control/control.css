@@ -278,10 +278,10 @@ input[type=range] { accent-color: var(--accent); }
 
 /* ---------- dialogs ---------- */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; z-index: 100; }
-.dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; width: min(900px, 92vw); max-height: 92vh; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; width: min(900px, 92vw); max-height: 94vh; padding: 18px; display: flex; flex-direction: column; gap: 12px; overflow: auto; }
 .dialog.wide { width: min(1100px, 94vw); }
 .dialog.small-dialog { width: min(480px, 92vw); }
-.dialog textarea { min-height: 380px; flex: 1; resize: vertical; font-family: Consolas, "Segoe UI", monospace; user-select: text; }
+.dialog textarea { min-height: max(160px, 34vh); flex: 1; resize: vertical; font-family: Consolas, "Segoe UI", monospace; user-select: text; }
 .field { display: flex; flex-direction: column; gap: 4px; font-size: .9em; color: var(--muted); }
 .field > input, .field > select, .field > textarea { color: var(--text); }
 .books-table { overflow: auto; max-height: 55vh; border: 1px solid var(--line); border-radius: 8px; }

@@ -64,7 +64,7 @@ const iconPath = () => path.join(__dirname, 'build', IS_WIN ? 'icon.ico' : 'icon
 const webPrefs = { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false };
 
 function createControl() {
-  controlWin = new BrowserWindow({ width: 1500, height: 900, minWidth: 1100, minHeight: 680, title: 'Scriptorium', backgroundColor: '#121419', show: false, icon: path.join(__dirname, 'build', 'icon.png'), webPreferences: webPrefs });
+  controlWin = new BrowserWindow({ width: 1500, height: 900, minWidth: 760, minHeight: 480, title: 'Scriptorium', backgroundColor: '#121419', show: false, icon: path.join(__dirname, 'build', 'icon.png'), webPreferences: webPrefs });
   controlWin.removeMenu();
   controlWin.loadFile(path.join(__dirname, 'control', 'index.html'));
   controlWin.once('ready-to-show', () => { controlWin.maximize(); controlWin.show(); });

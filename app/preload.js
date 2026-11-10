@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, webFrame } = require('electron');
 const inv = (ch) => (...a) => ipcRenderer.invoke(ch, ...a);
 
 contextBridge.exposeInMainWorld('api', {
@@ -21,6 +21,7 @@ contextBridge.exposeInMainWorld('api', {
   ytdlpDownload: inv('ytdlp:download'), ytdlpCancel: inv('ytdlp:cancel'),
   onYtdlpProgress: (cb) => ipcRenderer.on('ytdlp:progress', (_e, p) => cb(p)),
   about: inv('app:about'), makeShortcuts: inv('app:makeShortcuts'),
+  setZoom: (f) => webFrame.setZoomFactor(f), getZoom: () => webFrame.getZoomFactor(),
   listsAll: inv('lists:all'), listSave: inv('lists:save'), listLoad: inv('lists:load'), listDelete: inv('lists:delete'),
   listExport: inv('lists:export'), listImport: inv('lists:import'),
 });

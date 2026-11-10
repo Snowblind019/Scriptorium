@@ -365,7 +365,7 @@ const Settings = {
       <div class="form cols">
         ${this.sel('app', 'uiTheme', [['dark', 'Dark'], ['light', 'Light'], ['classic', 'Classic (Holyrics-like)'], ['midnight', 'Midnight blue'], ['warm', 'Warm'], ['contrast', 'High contrast'], ['custom', 'Custom colors']], 'Program theme')}
         ${this.col('app', 'uiAccent', 'Accent color')}
-        ${this.rng('app', 'uiScale', 80, 140, 5, 'Text size (%)')}
+        ${this.sel('app', 'uiScale', [['auto', 'Automatic (fits the screen)'], ['70', '70%'], ['80', '80%'], ['90', '90%'], ['100', '100%'], ['110', '110%'], ['125', '125%'], ['140', '140%']], 'Program size')}
         <div class="sect">${t('Custom colors')}</div>
         <div class="full colors-grid">${this.VARS.map(([k, n]) => `<label class="field"><span>${t(n)}</span><input type="color" data-cv="${k}" value="${cs[k] || this.toHex(cur.getPropertyValue('--' + k))}"></label>`).join('')}</div>
         <div class="full muted small">${t('Changing a custom color switches the program theme to “Custom colors”.')}</div>

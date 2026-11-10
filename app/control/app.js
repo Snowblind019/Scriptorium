@@ -54,8 +54,8 @@ const App = {
 
   defaultSettings() {
     return {
-      version: 4, lang: 'en', startView: 'songs',
-      uiTheme: 'dark', uiAccent: '#5b8dff', uiScale: 100, customColors: null,
+      version: 5, lang: 'en', startView: 'songs',
+      uiTheme: 'dark', uiAccent: '#5b8dff', uiScale: 'auto', customColors: null,
       themes: this.presetThemes(), activeTheme: 'default',
       ui: JSON.parse(JSON.stringify(ScripRender.DEFAULT_UI)),
       bible: { list: { vdc: true, bsb: true }, screen: { vdc: true, bsb: true, showTag: true }, names: 'ro', favorites: [], histMode: 'both', bookStyle: 'groups' },
@@ -95,6 +95,10 @@ const App = {
       s.keys.prev = (s.keys.prev || []).filter(k => k !== 'ArrowLeft');
       if (!saved.keys || !saved.keys.selNext) { s.keys.selNext = ['ArrowRight']; s.keys.selPrev = ['ArrowLeft']; }
       s.version = 4;
+    }
+    if (s.version < 5) {   // v4 → v5: text size became the automatic program size
+      if (s.uiScale === 100 || s.uiScale == null) s.uiScale = 'auto';
+      s.version = 5;
     }
     return s;
   },
@@ -143,7 +147,22 @@ const App = {
     root.style.cssText = '';
     if (s.uiTheme === 'custom' && s.customColors) for (const [k, v] of Object.entries(s.customColors)) root.style.setProperty('--' + k, v);
     root.style.setProperty('--accent', s.uiTheme === 'custom' && s.customColors && s.customColors.accent ? s.customColors.accent : s.uiAccent);
-    document.body.style.fontSize = (14 * (s.uiScale || 100) / 100) + 'px';
+    document.body.style.fontSize = '14px';
+    this.applyZoom();
+  },
+
+  // The layout was designed for big screens; on laptops the whole interface is scaled down so
+  // nothing overlaps. "Automatic" picks the size from the window; Settings › Program appearance can fix it.
+  zoomFor() {
+    const s = this.settings.uiScale;
+    if (s !== 'auto' && s != null && !isNaN(+s)) return Math.max(0.5, Math.min(2, +s / 100));
+    const z = api.getZoom() || 1, w = innerWidth * z, h = innerHeight * z;   // size in real CSS pixels
+    return Math.max(0.62, Math.min(1, w / 1480, h / 830));
+  },
+  applyZoom() {
+    const z = Math.round(this.zoomFor() * 100) / 100;
+    if (Math.abs((api.getZoom() || 1) - z) > 0.005) api.setZoom(z);
+    if (!this._zoomBound) { this._zoomBound = true; addEventListener('resize', debounce(() => this.applyZoom(), 150)); }
   },
 
   save: debounce(function () { api.saveSettings(App.settings); }, 400),
