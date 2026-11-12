@@ -4,9 +4,11 @@ const Settings = {
 
   SECTIONS: [
     ['general', 'General'], ['projector', 'Projector & screens'], ['themes', 'Projector themes'], ['overlays', 'Clock, key & page'],
-    ['marks', 'End-of-song mark & separator'], ['effects', 'Effects'], ['songs', 'Songs'], ['bible', 'Bible'],
-    ['keys', 'Keyboard shortcuts'], ['layout', 'Layout'], ['appearance', 'Program appearance'], ['media', 'Media & downloads'], ['install', 'Shortcuts & about'],
+    ['marks', 'End-of-song mark & separator'], ['effects', 'Effects'], ['songs', 'Songs'], ['sync', 'Song sync & backups'], ['bible', 'Bible'],
+    ['keys', 'Keyboard shortcuts'], ['layout', 'Layout'], ['appearance', 'Program appearance'], ['media', 'Media & downloads'], ['install', 'Updates & about'],
   ],
+  CLOCK: [['24', '24-hour (13:45)'], ['12', '12-hour (1:45 PM)']],
+  BACKUP_REASON: { manual: 'Made by hand', 'before-update': 'Before an update', 'before-sync': 'Before a sync', 'before-merge': 'Before merging a file', 'before-restore': 'Before restoring a backup' },
   FONTS: ['Segoe UI', 'Arial', 'Calibri', 'Cambria', 'Georgia', 'Times New Roman', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Candara', 'Constantia', 'Corbel', 'Palatino Linotype', 'Book Antiqua', 'Bahnschrift', 'Franklin Gothic Medium', 'Noto Sans', 'Noto Serif', 'DejaVu Sans', 'Liberation Sans', 'Helvetica', 'Impact'],
   POS: [['top-left', 'Top left'], ['top-center', 'Top center'], ['top-right', 'Top right'], ['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right'], ['center', 'Center']],
   FX_IN: [['none', 'None'], ['fade', 'Fade'], ['rise', 'Rise (fade + move up)'], ['sink', 'Settle (fade + move down)'], ['zoom', 'Gentle zoom'], ['blur', 'Blur to sharp'], ['focus', 'Focus (blur + zoom)']],
@@ -65,13 +67,14 @@ const Settings = {
     return this.page('General', '', `<div class="form cols">
       ${this.sel('app', 'lang', [['en', 'English'], ['ro', 'Romînă']], 'Interface language')}
       ${this.sel('app', 'startView', [['songs', 'Songs'], ['bible', 'Bible']], 'Open on start')}
+      ${this.sel('app', 'ui.overlays.clock.format', this.CLOCK, 'Clock format')}
       ${this.chk('app', 'clickShows', 'Clicking a slide or verse shows it immediately (otherwise click selects and Enter / Show puts it on screen)')}
       ${this.chk('app', 'escClearsSearch', 'Esc in a search box clears the search (the Bible stays on the same book, chapter and verse)')}
       ${this.chk('app', 'showTurnsOnProjector', 'Show turns the projector output on if it is off')}
       ${this.sel('app', 'bible.histMode', [['both', 'Reference + verse'], ['ref', 'Reference only'], ['text', 'Verse only']], 'Bible history shows')}
     </div>`);
   },
-  b_general(box) { this.bind(box, p => { if (p === 'lang') App.setLanguage(App.settings.lang); if (p === 'bible.histMode') App.renderHistory('bible'); }); },
+  b_general(box) { this.bind(box, p => { if (p === 'lang') App.setLanguage(App.settings.lang); if (p === 'bible.histMode') App.renderHistory('bible'); if (p.startsWith('ui.')) App.refreshProjector(); }); },
 
   s_projector() {
     return this.page('Projector & screens', 'The projector is a second screen connected with HDMI. In Windows press Win+P and choose “Extend” (macOS: Displays → use as separate display; Linux: display settings → join displays). Scriptorium then opens full-screen on that screen.',
@@ -131,7 +134,7 @@ const Settings = {
             <div class="${S('image', 'video', 'slideshow')}">${this.rng('theme', 'bg.mediaOpacity', 0.05, 1, 0.05, 'Picture / video opacity')}</div>
             ${this.rng('theme', 'bg.dim', 0, 0.9, 0.05, 'Darken background')}
             <div class="${S('image', 'video', 'slideshow')}">${this.rng('theme', 'bg.blur', 0, 20, 1, 'Blur')}</div>
-            <div class="thumbs${S('slideshow')}">${(bg.slides || []).map((u, i) => `<div class="th" style="background-image:url('${u}')"><button data-rm="${i}">✕</button></div>`).join('')}</div>
+            <div class="thumbs${S('slideshow')}">${(bg.slides || []).map((u, i) => `<div class="th" style="background-image:url('${ScripRender.cssUrl(u)}')"><button data-rm="${i}">✕</button></div>`).join('')}</div>
             <div class="sect">${t('Text')}</div>
             ${this.sel('theme', 'font', this.FONTS, 'Font')}
             ${this.sel('theme', 'weight', [[400, 'Normal'], [500, 'Medium'], [600, 'Semi-bold'], [700, 'Bold'], [800, 'Extra bold']], 'Weight')}
@@ -157,7 +160,7 @@ const Settings = {
   },
   b_themes(box) {
     const L = App.settings.themes;
-    $('#themeList').innerHTML = L.map(x => `<div class="item${x.id === this.editId ? ' sel' : ''}" data-id="${x.id}"><span class="ttl">${esc(x.name)}</span>${x.id === App.settings.activeTheme ? `<span class="tag">● ${t('on screen')}</span>` : ''}</div>`).join('');
+    $('#themeList').innerHTML = L.map(x => `<div class="item${x.id === this.editId ? ' sel' : ''}" data-id="${esc(x.id)}"><span class="ttl">${esc(x.name)}</span>${x.id === App.settings.activeTheme ? `<span class="tag">● ${t('on screen')}</span>` : ''}</div>`).join('');
     $$('#themeList .item').forEach(el => { el.onclick = () => { this.editId = el.dataset.id; this.show('themes'); }; el.ondblclick = () => App.setActiveTheme(el.dataset.id); });
     $('#thNew').onclick = () => this.addTheme(JSON.parse(JSON.stringify(ScripRender.DEFAULT_THEME)), t('New theme'));
     $('#thDup').onclick = () => this.addTheme(JSON.parse(JSON.stringify(this.editing())), this.editing().name + ' (2)');
@@ -210,9 +213,9 @@ const Settings = {
       ${this.rng('app', `ui.overlays.${name}.size`, 16, 120, 2, 'Size')}
       ${this.col('app', `ui.overlays.${name}.color`, 'Color')}
       ${this.rng('app', `ui.overlays.${name}.opacity`, 0.1, 1, 0.05, 'Opacity')}${extra}`;
-    return this.page('Clock, key & page', 'Small indicators on the projector. The clock is always 24-hour; it can also be toggled with its shortcut (C). Key/chord and page n/N only appear while a song is on screen.', `
+    return this.page('Clock, key & page', 'Small indicators on the projector. The clock can be 24-hour or 12-hour (AM/PM); it can also be toggled with its shortcut (C). Key/chord and page n/N only appear while a song is on screen.', `
       <div class="form cols">
-        ${o('clock', 'Clock (24 h)')}
+        ${o('clock', 'Clock', this.sel('app', 'ui.overlays.clock.format', this.CLOCK, 'Clock format'))}
         ${o('key', 'Song key / chord', this.txt('app', 'ui.overlays.key.prefix', 'Text before the key'))}
         ${o('page', 'Song page (e.g. 6/8)', this.sel('app', 'ui.overlays.page.style', [['fraction', '6/8'], ['words', '6 / 8'], ['dots', '● ○ ○ (dots)']], 'Style'))}
       </div><div id="ovPreview" class="demo-preview" style="margin-top:14px"></div>`);
@@ -405,16 +408,97 @@ const Settings = {
   },
 
   s_install() {
-    return this.page('Shortcuts & about', 'Scriptorium is a normal program: the installer (Windows), AppImage / .deb (Linux) or .dmg (macOS) adds it to the Start menu / app launcher. If you use the portable folder, create the shortcuts here.', `
+    return this.page('Updates & about', 'Scriptorium looks for a new version on GitHub (github.com/Snowblind019/Scriptorium) when it starts, and asks before installing it. Your songs are backed up first and merged with the songs that come with the new version.', `
       <div class="form cols">
-        <div class="full row gap"><button class="btn" id="mkShort">${t('Create Start menu and desktop shortcuts')}</button><span id="mkRes" class="muted small"></span></div>
+        <div class="sect">${t('Updates')}</div>
+        ${this.chk('app', 'update.auto', 'Check for a new version when Scriptorium starts (needs internet)')}
+        <div class="full row gap"><button class="btn" id="updCheck">${t('Check for updates now')}</button><span id="updRes" class="muted small"></span></div>
+        <div class="sect">${t('Shortcuts')}</div>
+        <div class="full muted small">${t('The installers add Scriptorium to the Start menu / app menu. Use this only if the shortcuts are missing.')}</div>
+        <div class="full row gap"><button class="btn sm ghost" id="mkShort">${t('Create Start menu and desktop shortcuts')}</button><span id="mkRes" class="muted small"></span></div>
+        <div class="sect">${t('About')}</div>
         <div class="full muted small" id="aboutInfo"></div>
       </div>`);
   },
-  async b_install() {
-    $('#mkShort').onclick = async () => { try { const r = await api.makeShortcuts(); $('#mkRes').textContent = r; } catch (e) { $('#mkRes').textContent = e.message; } };
+  async b_install(box) {
+    this.bind(box);
+    const clean = e => String(e.message || e).replace(/^Error invoking remote method '[^']+': (Error: )?/, '');
+    $('#mkShort').onclick = async () => { try { const r = await api.makeShortcuts(); $('#mkRes').textContent = t(r); } catch (e) { $('#mkRes').textContent = clean(e); } };
+    $('#updCheck').onclick = async () => {
+      $('#updRes').textContent = t('Checking…');
+      try {
+        const r = await api.updateCheck();
+        if (r.status === 'available') { $('#updRes').textContent = `${t('Version')} ${r.version} ${t('is available')}.`; App.showUpdate(r); }
+        else $('#updRes').textContent = `${t('You have the latest version')} (${r.current}).`;
+      } catch (e) { $('#updRes').textContent = t('Could not check') + ': ' + clean(e); }
+    };
     const a = await api.about();
     if (!$('#aboutInfo')) return;
-    $('#aboutInfo').innerHTML = `Scriptorium ${esc(a.version)} · Electron ${esc(a.electron)} · ${esc(a.platform)}<br>${t('Data folder')}: ${esc(a.userData)}<br>VDC 1924 (Cornilescu) · Berean Standard Bible (public domain)`;
+    $('#aboutInfo').innerHTML = `Scriptorium ${esc(a.version)} · Electron ${esc(a.electron)} · ${esc(a.platform)}<br>${t('Data folder')}: <span class="sync-path">${esc(a.userData)}</span><br>VDC 1924 (Cornilescu) · Berean Standard Bible (public domain)`;
+  },
+
+  // ---------- song sync & backups ----------
+  s_sync() {
+    const f = (App.settings.songSync || {}).folder || '';
+    return this.page('Song sync & backups', 'Every song remembers its own changes, so two computers (e.g. church and home) can be merged without losing anything: songs added or changed on either computer are kept, a song deleted on one computer is deleted on the other, and if the same song was changed on both, the newer version is kept and the other one goes into the song book “Conflicte la îmbinare / Merge conflicts”. The songs that come with an update are merged the same way.', `
+      <div class="form cols">
+        <div class="sect">${t('This computer')}</div>
+        ${this.f('Name of this computer (shown on the other computer)', '<input id="syDevice">')}
+        <div class="full muted small" id="syStats"></div>
+        <div class="sect">${t('Automatic: a shared folder')}</div>
+        <div class="full muted small">${t('Choose the same folder on both computers – a folder that OneDrive, Google Drive, Dropbox, Nextcloud or Syncthing keeps in sync, or a USB stick you carry. Scriptorium writes its songs there and merges the other computer’s songs when it starts, every few minutes, and when it closes.')}</div>
+        <div class="full sync-box"><div><b>${t('Sync folder')}:</b> <span class="sync-path" id="syFolder">${f ? esc(f) : t('none')}</span></div>
+          <div class="row gap"><button class="btn sm" id="syPick">${t('Choose folder…')}</button><button class="btn sm ghost" id="syNow"${f ? '' : ' disabled'}>${t('Sync now')}</button><button class="btn sm ghost danger" id="syStop"${f ? '' : ' disabled'}>${t('Stop syncing')}</button></div>
+          <div class="muted small" id="syLast"></div></div>
+        <div class="sect">${t('By hand: a file')}</div>
+        <div class="full muted small">${t('Save the songs to a file, take it to the other computer (USB stick, e-mail…) and merge it there. Do the same in the other direction to get that computer’s changes back.')}</div>
+        <div class="full row gap"><button class="btn sm" id="syExport">${t('Save songs to a file…')}</button><button class="btn sm" id="syMerge">${t('Merge songs from a file…')}</button></div>
+        <div class="sect">${t('Recent merges')}</div>
+        <div class="full" id="syLog"></div>
+        <div class="sect">${t('Backups')}</div>
+        <div class="full muted small">${t('A backup is made automatically before every update and every merge (the newest 30 are kept). Restoring a backup puts the songs back as they were – on the other computers too, after the next sync.')}</div>
+        <div class="full row gap"><button class="btn sm" id="syBackup">${t('Back up now')}</button><button class="btn sm ghost" id="syOpenBk">${t('Open backups folder')}</button><button class="btn sm ghost" id="syOpenSongs">${t('Open songs folder')}</button></div>
+        <div class="full" id="syBackups"></div>
+      </div>`);
+  },
+  async b_sync(box) {
+    const clean = e => String(e.message || e).replace(/^Error invoking remote method '[^']+': (Error: )?/, '');
+    const st = await api.songsStatus();
+    if (!$('#syDevice')) return;
+    const when = ms => ms ? new Date(ms).toLocaleString() : t('never');
+    $('#syDevice').value = st.device.name;
+    $('#syDevice').onchange = async e => { await api.songsSetDeviceName(e.target.value); };
+    $('#syStats').textContent = `${st.songs} ${t('songs')} · ${st.books} ${t('song books')}`;
+    $('#syLast').textContent = (App.settings.songSync || {}).folder ? `${t('Last sync')}: ${when(st.lastSync)}` : '';
+    $('#syLog').innerHTML = st.log.length ? st.log.slice(0, 10).map(l => `<div class="backup-row"><span class="grow">${esc(new Date(l.when).toLocaleString())} · ${esc(l.source)}</span><span class="muted small">+${l.added} · ~${l.updated} · −${l.deleted}${l.restored ? ' · ↺' + l.restored : ''}${l.conflicts ? ` · ⚠ ${l.conflicts} ${t('conflicts')}` : ''}</span></div>`).join('') : `<span class="muted">${t('None yet.')}</span>`;
+    $('#syBackups').innerHTML = st.backups.length ? st.backups.map(b => `<div class="backup-row"><span class="grow">${esc(b.date)} · <span class="muted">${esc(t(this.BACKUP_REASON[b.reason.replace(/-[\d.]+(-\d+)?$/, '').replace(/-\d+$/, '')] || b.reason))}</span></span><span class="muted small">${(b.size / 1024).toFixed(0)} KB</span><button class="btn sm ghost" data-restore="${esc(b.file)}">${t('Restore')}</button></div>`).join('') : `<span class="muted">${t('None yet.')}</span>`;
+    const done = async (sum, title) => { await Songs.reload(); App.mergeReport(Array.isArray(sum) ? sum : [sum], title); this.show('sync'); };
+    $('#syPick').onclick = async () => {
+      const folder = await api.songsPickSyncFolder(); if (!folder) return;
+      App.settings.songSync = { ...(App.settings.songSync || {}), folder }; await api.saveSettings(App.settings);
+      const r = await api.songsSyncNow();
+      if (r.errors && r.errors.length) toast(t('Sync') + ': ' + r.errors.join(' · '), 6000);
+      await done(r.merged, t('Songs merged'));
+      if (!r.merged || !r.merged.length) toast(t('Sync folder set. Choose the same folder on the other computer.'), 5000);
+    };
+    $('#syStop').onclick = async () => { App.settings.songSync = { ...(App.settings.songSync || {}), folder: '' }; await api.saveSettings(App.settings); this.show('sync'); };
+    $('#syNow').onclick = async () => {
+      const r = await api.songsSyncNow();
+      if (r.errors && r.errors.includes('missing')) { toast(t('The sync folder is not available (USB stick not plugged in, or the folder was moved).'), 6000); return; }
+      if (r.errors && r.errors.length) toast(t('Sync') + ': ' + r.errors.join(' · '), 6000);
+      if (r.merged && r.merged.length) await done(r.merged); else { toast(t('Synced – nothing new from the other computers.')); this.show('sync'); }
+    };
+    $('#syExport').onclick = async () => { try { const p = await api.songsExport(); if (p) toast(t('Saved') + ': ' + p, 5000); } catch (e) { toast(clean(e), 6000); } };
+    $('#syMerge').onclick = async () => {
+      try { const s = await api.songsMergeFile(); if (!s) return; if (!s.changed) toast(t('Nothing new in that file – the songs were already the same.'), 4000); else await done(s); }
+      catch (e) { toast(t('Could not merge') + ': ' + clean(e), 7000); }
+    };
+    $('#syBackup').onclick = async () => { try { await api.songsBackupNow(); toast(t('Backup made')); this.show('sync'); } catch (e) { toast(clean(e), 6000); } };
+    $('#syOpenBk').onclick = () => api.songsOpenBackups();
+    $('#syOpenSongs').onclick = () => api.openSongFolder();
+    $$('[data-restore]', box).forEach(b => b.onclick = async () => {
+      if (!confirm(t('Put the songs back as they were in this backup?') + '\n' + b.closest('.backup-row').querySelector('.grow').textContent + '\n\n' + t('(A backup of the songs as they are now is made first.)'))) return;
+      try { await api.songsRestore(b.dataset.restore); await Songs.reload(); toast(t('Songs restored from the backup'), 4000); this.show('sync'); } catch (e) { toast(clean(e), 7000); }
+    });
   },
 };

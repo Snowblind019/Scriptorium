@@ -1,27 +1,32 @@
 {
   "name": "scriptorium",
   "productName": "Scriptorium",
-  "version": "0.4.5",
-  "description": "Bible & song projection for church (VDC 1924 / BSB, C\u00eent\u0103rile Evangheliei and more)",
-  "author": "Scriptorium",
+  "version": "0.5.0",
+  "description": "Bible & song projection for church (VDC 1924 / BSB, Cîntările Evangheliei and more)",
+  "author": {
+    "name": "Scriptorium",
+    "email": "scriptorium@users.noreply.github.com"
+  },
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist:win": "electron-builder --win",
-    "dist:linux": "electron-builder --linux",
-    "dist:mac": "electron-builder --mac",
-    "dist:portable": "node build/package.js"
+    "test": "node --test \"test/*.test.js\"",
+    "songs:stamp": "node build/stamp-songs.js",
+    "predist": "node build/stamp-songs.js && node --test \"test/*.test.js\"",
+    "dist": "electron-builder --publish never",
+    "dist:win": "npm run predist && electron-builder --win --publish never",
+    "dist:linux": "npm run predist && electron-builder --linux --publish never",
+    "dist:mac": "npm run predist && electron-builder --mac --publish never",
+    "test:updater": "electron test/updater.electron.js"
   },
   "devDependencies": {
-    "@electron/packager": "^18.4.4",
-    "electron": "^38.0.0",
-    "electron-builder": "^25.1.8",
-    "rcedit": "^4.0.1"
+    "electron": "^45.3.1",
+    "electron-builder": "^26.18.0"
   },
   "build": {
     "appId": "ro.scriptorium.app",
     "productName": "Scriptorium",
-    "electronVersion": "38.8.6",
+    "copyright": "Scriptorium",
     "asar": false,
     "directories": {
       "output": "../dist",
@@ -30,6 +35,8 @@
     "files": [
       "main.js",
       "preload.js",
+      "songdb.js",
+      "updater.js",
       "selftest.js",
       "package.json",
       "control/**",
@@ -37,11 +44,25 @@
       "shared/**",
       "data/**",
       "build/icon.png",
-      "build/icon.ico"
+      "build/icon.ico",
+      "!**/*.bak",
+      "!**/.*"
     ],
+    "publish": null,
+    "electronFuses": {
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableCookieEncryption": true,
+      "resetAdHocDarwinSignature": true
+    },
     "win": {
       "target": [
-        "nsis"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "icon": "build/icon.ico"
     },
@@ -52,26 +73,80 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Scriptorium",
-      "artifactName": "Scriptorium-Setup-${version}.${ext}"
+      "artifactName": "Scriptorium-Setup-${version}.${ext}",
+      "deleteAppDataOnUninstall": false
     },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "category": "AudioVideo",
       "icon": "build/icon.png",
-      "maintainer": "Scriptorium",
+      "executableName": "scriptorium",
+      "maintainer": "Scriptorium <scriptorium@users.noreply.github.com>",
+      "vendor": "Scriptorium",
       "synopsis": "Bible & song projection",
-      "artifactName": "Scriptorium-${version}-${arch}.${ext}"
+      "description": "Bible and song projection for church services, in Romanian and English.",
+      "artifactName": "Scriptorium-${version}-linux-${arch}.${ext}",
+      "desktop": {
+        "entry": {
+          "StartupWMClass": "Scriptorium",
+          "Keywords": "church;bible;songs;projector;lyrics;"
+        }
+      },
+      "syncDesktopName": true
+    },
+    "rpm": {
+      "artifactName": "Scriptorium-${version}-linux-${arch}.${ext}",
+      "fpm": [
+        "--rpm-rpmbuild-define=_build_id_links none"
+      ]
     },
     "mac": {
       "target": [
-        "dmg"
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
       ],
       "category": "public.app-category.productivity",
       "icon": "build/icon.png",
-      "artifactName": "Scriptorium-${version}-${arch}.${ext}"
+      "artifactName": "Scriptorium-${version}-mac-${arch}.${ext}",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "artifactName": "Scriptorium-${version}-mac-${arch}.${ext}",
+      "title": "Scriptorium ${version}"
     }
-  }
+  },
+  "homepage": "https://github.com/Snowblind019/Scriptorium",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Snowblind019/Scriptorium.git"
+  },
+  "license": "UNLICENSED",
+  "desktopName": "scriptorium.desktop"
 }

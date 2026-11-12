@@ -1,7 +1,9 @@
 // Developer self-test: SCRIPTORIUM_SELFTEST=<folder> [SCRIPTORIUM_TESTMEDIA=<folder with test-audio.mp3 / test-video.webm>]
 // Drives the UI, saves screenshots + log.json, then quits. Uses its own userdata folder.
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
+const crypto = require('crypto');
 const { pathToFileURL } = require('url');
 
 module.exports = async function selftest(getWins, outDir) {
@@ -20,6 +22,26 @@ module.exports = async function selftest(getWins, outDir) {
     catch (e) { log.push(['ERR', js.slice(0, 100), String(e)]); }
   };
   getWins().controlWin.webContents.on('console-message', (e) => { if (e.level === 'error' || e.level === 'warning') log.push(['console', e.level, e.message, e.lineNumber, e.sourceId]); });
+  const save = () => fs.writeFileSync(path.join(outDir, 'log.json'), JSON.stringify(log, null, 1));
+  { const { app } = require('electron'); log.push(['runtime', { version: app.getVersion(), packaged: app.isPackaged, noSandbox: app.commandLine.hasSwitch('no-sandbox'), ozone: app.commandLine.getSwitchValue('ozone-platform') || 'default', electron: process.versions.electron }]); }
+  // update end-to-end (Linux folder install): SCRIPTORIUM_UPDATE_E2E=<folder with release.json + the .tar.gz>, SCRIPTORIUM_UPDATE_TO=<version>
+  if (process.env.SCRIPTORIUM_UPDATE_E2E) {
+    const { app } = require('electron'), dir = process.env.SCRIPTORIUM_UPDATE_E2E, marker = path.join(outDir, 'update-e2e.json');
+    await wait(3000);
+    if (app.getVersion() === process.env.SCRIPTORIUM_UPDATE_TO) {
+      fs.writeFileSync(marker, JSON.stringify({ ok: true, version: app.getVersion(), exe: process.execPath, songs: getWins().songDb.state.songs.size, ui: await run('Songs.all.length') }));
+      return;
+    }
+    const u = getWins().updater;
+    u.getJson = async () => JSON.parse(fs.readFileSync(path.join(dir, 'release.json'), 'utf8'));
+    u.fetchFile = async (url, dest) => { fs.copyFileSync(path.join(dir, path.basename(new URL(url).pathname)), dest); return crypto.createHash('sha256').update(fs.readFileSync(dest)).digest('hex'); };
+    const r = await u.check(); log.push(['check', r]);
+    await u.download(); log.push(['downloaded', u.file]);
+    save();
+    await u.install();
+    await wait(60000);   // the program quits and the new version starts
+    return;
+  }
   await wait(5000);
   if (process.env.SCRIPTORIUM_SIZES) {   // screenshots at laptop sizes: SCRIPTORIUM_SIZES=1280x720,1366x768
     const w = getWins().controlWin;
@@ -138,5 +160,66 @@ module.exports = async function selftest(getWins, outDir) {
   await wait(900);
   await shot('05-songs-bokeh');
   await run(`App.settings.lang='ro'; I18N.lang='ro'; t('Show') + ' / ' + t('Songs')`);
-  fs.writeFileSync(path.join(outDir, 'log.json'), JSON.stringify(log, null, 1));
+  await run(`App.settings.lang='en'; I18N.lang='en'; 1`);
+
+  // ---------- 0.5: 12-hour clock ----------
+  await run(`App.settings.ui.overlays.clock.format='12'; App.clockOn=true; App.refreshProjector(); 1`);
+  await wait(1200);
+  await run(`'header: ' + document.querySelector('#clock').textContent + ' | projector: ' + document.querySelector('#preview .sr-ov[data-o="clock"]').textContent + ' | 12h ok=' + /^\\d{1,2}:\\d\\d (AM|PM)$/.test(document.querySelector('#preview .sr-ov[data-o="clock"]').textContent)`);
+  await run(`App.setView('settings'); Settings.show('overlays'); document.querySelector('[data-b="app:ui.overlays.clock.format"]').value`);
+  await shot('06-clock-12h');
+  await run(`App.settings.ui.overlays.clock.format='24'; App.clockOn=false; App.refreshProjector(); App.setView('songs'); 1`);
+  await wait(1200);
+  await run(`/^\\d\\d:\\d\\d:\\d\\d$/.test(document.querySelector('#clock').textContent) + ' ' + document.querySelector('#clock').textContent`);
+
+  // ---------- 0.5: song database (edits go through the merge-aware database) ----------
+  const db = getWins().songDb;
+  await run(`(async()=>{ const x=Songs.find('cor',3); Songs.edit(x); document.querySelector('#edName').value='Edited by the self-test'; await Songs.saveEditor(); return Songs.find('cor',3).song.title + ' rev=' + !!Songs.find('cor',3).song.rev; })()`);
+  log.push(['main db', db.state.songs.get([...db.state.songs.values()].find(s => s.book === 'cor' && s.number === 3).uid).title]);
+  await run(`(async()=>{ Songs.edit(null); document.querySelector('#edBook').value='altele'; document.querySelector('#edNumber').value='4321'; document.querySelector('#edName').value='Brand new song'; document.querySelector('#edText').value='Line one\\nLine two\\n\\n[R]\\nChorus'; await Songs.saveEditor(); const x=Songs.find('altele',4321); return x ? x.song.uid + ' ' + x.song.sections.length + ' sections' : 'MISSING'; })()`);
+  await run(`(async()=>{ const x=Songs.find('altele',4321); Songs.edit(x); window.confirm=()=>true; await Songs.deleteCurrent(); return Songs.find('altele',4321) ? 'still there' : 'deleted'; })()`);
+  log.push(['main db tombstones', db.state.goneSongs.size]);
+  await run(`(async()=>{ App.ask=async()=>'Test book'; await Songs.newBook(); Songs.renderBooks(); const b=Songs.books.find(b=>b.name==='Test book'); return b ? b.id : 'MISSING'; })()`);
+  await run(`(async()=>{ window.confirm=()=>true; Songs.openBooks(); const rows=[...document.querySelectorAll('#booksTable .brow[data-i]')]; const row=rows.find(r=>r.querySelector('input').value==='Test book'); row.querySelector('[data-a="del"]').click(); await new Promise(r=>setTimeout(r,300)); document.querySelector('#booksModal').classList.add('hidden'); return Songs.books.some(b=>b.name==='Test book') ? 'still there' : 'book deleted'; })()`);
+  log.push(['main db books', db.state.books.size, 'gone books', db.state.goneBooks.size]);
+
+  // ---------- 0.5: another computer, via a sync folder (with one conflict and a hostile title) ----------
+  const { SongDB } = require('./songdb');
+  const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'scr-sync-'));
+  const other = new SongDB({ dir: path.join(folder, '..', path.basename(folder) + '-pc2'), bundledDir: path.join(__dirname, 'data', 'songs'), backupDir: path.join(folder, '..', path.basename(folder) + '-bk'), hostname: 'home-pc' }).load();
+  other.mergeBundled(); other.setDeviceName('Home PC');
+  const o5 = [...other.state.songs.values()].find(s => s.book === 'cor' && s.number === 5), o3 = [...other.state.songs.values()].find(s => s.book === 'cor' && s.number === 3);
+  other.apply({ songs: [{ ...o5, title: 'Changed at home' }, { ...o3, title: 'Home edit of 3' }] }, Date.now() + 60000);
+  other.apply({ songs: [{ book: 'altele', number: 777, title: '<img src=x onerror=alert(1)>Hostile', sections: [{ type: 'verse', text: '<b>bold?</b>' }] }] });
+  other.syncFolder(folder);
+  await run(`(async()=>{ App.settings.songSync={folder:${JSON.stringify(folder)}}; await api.saveSettings(App.settings); const r=await api.songsSyncNow(); await Songs.reload(); App.mergeReport(r.merged); return JSON.stringify({merged:r.merged.length, errors:r.errors, conflicts:r.merged[0]&&r.merged[0].conflicts.length}); })()`);
+  await wait(500);
+  await run(`[Songs.find('cor',5).song.title, Songs.find('cor',3).song.title, !document.querySelector('#mergeModal').classList.contains('hidden'), document.querySelectorAll('#mergeList .item').length].join(' | ')`);
+  await shot('07-merge-conflict');
+  await run(`document.querySelector('#mergeOk').click(); document.querySelector('#songSearch').value='Hostile'; Songs.search(); const h=document.querySelector('#songList').innerHTML; [h.includes('&lt;img'), !document.querySelector('#songList img')].join(' escaped/no-img ')`);
+  await run(`Songs.books.some(b=>b.id==='merge-conflicts') + ' conflict book; files in folder: ' + ${JSON.stringify(folder)}.length`);
+  log.push(['sync folder files', fs.readdirSync(folder)]);
+  other.syncFolder(folder);
+  log.push(['home pc got church edits', [...other.state.songs.values()].find(s => s.book === 'cor' && s.number === 3).title, 'conflict copies', [...other.state.songs.values()].filter(s => s.book === 'merge-conflicts').length]);
+  await run(`App.setView('settings'); Settings.show('sync'); 1`); await wait(800);
+  await run(`[document.querySelector('#syDevice').value, document.querySelectorAll('#syLog .backup-row').length + ' merges', document.querySelectorAll('#syBackups .backup-row').length + ' backups', document.querySelector('#syFolder').textContent].join(' | ')`);
+  await shot('08-settings-sync');
+
+  // ---------- 0.5: updates ----------
+  await run(`App.setView('settings'); Settings.show('install'); 1`); await wait(500);
+  await shot('09-settings-updates');
+  await run(`api.updateCheck().then(r => JSON.stringify(r), e => 'check error: ' + e.message)`);
+  await run(`App.showUpdate({ version: '9.9.9', current: '0.5.0', notes: 'Test notes\\n- one\\n- <b>two</b>', date: '2026-11-12T10:00:00Z', size: 99e6, canInstall: true }); [document.querySelector('#updTitle').textContent, document.querySelector('#updNotes').innerHTML.includes('&lt;b&gt;')].join(' | ')`);
+  await wait(300); await shot('10-update-dialog');
+  await run(`document.querySelector('#updLater').click(); document.querySelector('#updModal').classList.contains('hidden')`);
+
+  // ---------- 0.5: security ----------
+  await run(`api.ytdlpInfo('--exec=touch /tmp/pwned').then(() => 'ACCEPTED?!', e => 'rejected: ' + e.message)`);
+  await run(`api.ytdlpDownload({ url: 'https://example.com/x', name: '../../evil', kind: 'audio', format: 'exe', quality: '1; rm -rf ~', rate: '-i /etc/passwd' }).then(() => 'ran', e => 'ran with sanitized args or failed: ' + e.message.slice(0,80))`);
+  const before = getWins().controlWin.webContents.getURL();
+  await run(`location.href = 'file:///etc/hosts'; 'navigating'`);
+  await wait(800);
+  log.push(['navigation blocked', getWins().controlWin.webContents.getURL() === before]);
+  await run(`window.open('https://example.com') === null ? 'window.open blocked' : 'OPENED'`);
+  save();
 };

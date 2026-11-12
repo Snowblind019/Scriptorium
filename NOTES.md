@@ -1,14 +1,12 @@
 # Scriptorium – build notes
 
-## How to install / start (no .bat or .sh needed)
-- The old `Scriptorium.bat` and the portable folder are gone; use the installers below. Developers can still run `npm start` inside `app/`, and `app/selftest.js` is the automated test.
-- **Windows:** run `dist\Scriptorium-Setup-<version>.exe`. It installs Scriptorium for your user and adds a **Start-menu entry and a desktop shortcut**. To pin it to the taskbar, right-click the Start-menu entry → Pin to taskbar.
-- **Linux:** two options.
-  - Extract `dist/Scriptorium-<version>-linux-x64.tar.xz` anywhere and start `Scriptorium/scriptorium` once. Then use **Settings → Shortcuts & about → Create Start menu and desktop shortcuts** to add it to the app menu.
-  - Or, on a Linux PC, run `npm run dist:linux` in `app/` to get a proper AppImage + .deb. Those can't be made on this Windows PC, because Windows won't allow the symlinks they need.
-- **macOS:** on a Mac, run `npm install` and then `npm run dist:mac` in `app/`. That makes a `.dmg`; drag Scriptorium into Applications. This can't be built on Windows, and the app isn't code-signed, so the first launch needs right-click → Open.
+## How to install / start
+- Installers are published as **GitHub releases** (github.com/Snowblind019/Scriptorium/releases), built by `.github/workflows/release.yml` on real Windows, macOS and Linux machines. They are no longer kept in `dist/` in git.
+- **Windows:** `Scriptorium-Setup-<version>.exe` (per-user install, Start menu + desktop shortcut).
+- **macOS:** `Scriptorium-<version>-mac-arm64.dmg` (Apple Silicon) or `-mac-x64.dmg` (Intel). Ad-hoc signed, not notarized: the first launch needs System Settings → Privacy & Security → Open Anyway (or `xattr -dr com.apple.quarantine /Applications/Scriptorium.app`).
+- **Fedora / Linux:** `curl -fsSL https://raw.githubusercontent.com/Snowblind019/Scriptorium/main/install-linux.sh | bash` (user install in `~/.local/share/scriptorium`, self-updating), or the `.rpm` with `sudo dnf install`.
 - The projector is **off at start**. **Show** turns it on, or use the "Projector off/on" button at the top.
-- **HDMI:** the projector is just a second screen. On Windows press Win+P → **Extend**, and Scriptorium goes full-screen on that screen. Settings → Projector & screens lets you pick the screen.
+- **HDMI:** the projector is just a second screen set to *Extend*. Settings → Projector & screens lets you pick the screen.
 
 ## Session 3 (2026-11-10) – done
 **Layout (Songs & Bible screens)**
@@ -169,8 +167,49 @@ The counts are in `cantaricrestine-summary.json`. Re-run everything with `python
 - **0.4.4 – delete saved lists.** **Delete list** removes the saved copy of the open list, and each entry in **Open ▾** has its own **Delete** button.
 - Song data is now version 4 (16 books, 4,550 songs). Books you haven't edited update on the next start.
 
+## Session 5 (2026-11-12) – 0.5.0: updates, two-computer songs, all platforms
+**Updates** (`app/updater.js`)
+- 6 s after start Scriptorium asks the GitHub API for the latest release of Snowblind019/Scriptorium. A newer version shows a window with the release notes: *Update now / Later / Skip this version / Download page*. Settings → Updates & about: check now, automatic check on/off.
+- The installer for this computer is downloaded into `<userData>/updates` and checked against GitHub's SHA-256 digest of the file and the release's `SHA256SUMS.txt` (both must agree; with neither it refuses). Only github.com / *.githubusercontent.com addresses are accepted, also after redirects. The window can't pass URLs – it can only say check/download/install.
+- Installing: Windows runs the NSIS installer silently over the old one and restarts; macOS swaps the `.app` (with roll-back) and restarts; Linux user install (install-linux.sh / .tar.gz) swaps the folder and restarts; Linux RPM runs `pkexec dnf install` (password prompt) and restarts. Running from source only opens the download page.
+- Tested here: a real update of an installed 0.5.0 to 0.5.1 on Fedora (folder install) – found, downloaded, verified, swapped, restarted as 0.5.1 with the songs intact. 11 updater tests (damaged file, checksum mismatch, no checksums, redirect to another host, oversize, file changed after the check…). The Windows and macOS install steps and the RPM step could not be run here.
+
+**Songs on two computers** (`app/songdb.js`)
+- Every song has a permanent id (`uid`), every edit a revision id (`rev`) and the song keeps the revs of its earlier versions (`hist`). Deletions leave tombstones (`songs/_sync.json`). Song files are now one song per line (readable git diffs), data version 5.
+- Merge rules: added → kept; changed on one side → taken; deleted on one side → deleted, unless edited on the other (edit wins); changed on both → newer kept, the other copied into the book *Conflicte la îmbinare / Merge conflicts*. Revs (not content) decide, so changing something back or restoring a backup is still a new edit. Merges are idempotent and give the same result in either direction; conflict copies are identical on both computers (no duplicates).
+- Where merges happen: (1) the songs shipped with a new version, once per version; (2) a **sync folder** (OneDrive/Google Drive/Dropbox/Nextcloud/Syncthing/USB) – each computer writes `Scriptorium-songs-<name>-<id>.scsongs` and merges the others' at start, every 3 minutes, 8 s after an edit and when closing; (3) **Save songs to a file / Merge songs from a file**.
+- Backups (gzip'd) before every update and every merge that changes something, newest 30, with Restore (recorded as new edits so the other computers follow).
+- The window saves through `songs:apply` (upserts/removals, not whole books), so a window that hasn't reloaded yet can't delete songs another computer added. If the window edits a version that a merge replaced meanwhile, both versions are kept.
+- Songs from 0.4 are upgraded automatically: matched to the shipped songs (book + number + title, then title, then number) so both computers give them the same ids; local edits, additions, deletions, renamed books and deleted books (`.json.deleted`) are all carried over.
+- `tools/bundle-songs.js` folds a computer's songs (a `.scsongs` file or a songs folder) into `app/data/songs` for the next release; conflict copies are left out. `npm run songs:stamp` (also before every build) gives new shipped songs their ids and records hand edits to the shipped files as new versions.
+- Tests: `npm test` – 22 tests incl. two computers, conflicts, simultaneous conflicts, delete vs edit, deleted books, moved songs, updates, 0.4 upgrade, stale window, sync folder, restore, A→B→A, hostile files, changing back + old files, damaged files, copied data folders, read-only mode, and a random three-computer test (with stale files and back-and-forth edits; 40 seeds) that checks every computer ends up identical and no edit is lost.
+
+**Clock:** 24-hour or 12-hour (AM/PM) for the operator clock and the projector clock – Settings › General or Clock, key & page (`ui.overlays.clock.format`).
+
+**Platforms**
+- Electron 38 → **45.3.1** (38 no longer gets security updates), electron-builder 26.
+- Fedora/Wayland: programs can't place windows under Wayland, so the projector could open on the wrong screen; Scriptorium now runs through XWayland there (`SCRIPTORIUM_WAYLAND=1` keeps native Wayland). The Chromium sandbox stays on (user namespaces); it is only turned off if neither namespaces nor a setuid helper are available.
+- Builds: Windows NSIS (x64), macOS DMG + zip (arm64 and x64, ad-hoc signed), Linux RPM + tar.gz (x64). The RPM uses `_build_id_links none` so it doesn't clash with other Electron RPMs. macOS gets a normal app menu (no Reload, so Cmd+R can't clear the screen mid-service).
+
+**Security review – fixed**
+- A file dropped on the window (or any link) could load a page that gets the program's full API → all navigation, new windows and webviews are blocked; IPC only answers the program's own pages; permissions limited to audio output / fullscreen / clipboard.
+- Pasting `--exec …` as a "link" in the downloader passed it to yt-dlp as an option (runs a command) → only http(s) links, passed after `--`; format/quality/sample-rate checked against fixed lists; `--no-exec`; `%` in names escaped; only files inside the download folder are accepted as results.
+- yt-dlp and ffmpeg downloads are now checked against their releases' SHA-256 lists; redirects to other hosts are refused.
+- HTML injection: book ids, song numbers and theme ids were put into the page unescaped; image/video addresses in `url('…')` could break out → all escaped (also `'`). Song and list files from other computers are validated field by field (types, lengths, ids), unknown fields dropped.
+- Service lists: size limit and only known item types. Media folder scan skips unreadable folders and stops at 5,000 files.
+- Settings and lists are written atomically (no half-written file after a crash or power cut).
+- A second copy of the program could start for a moment before quitting → exits immediately.
+- Project files were world-writable (777 after the copy from Windows) → 644/755. Line endings normalised (`.gitattributes`).
+- Installed program: Electron fuses turn off `NODE_OPTIONS` and `--inspect` (code injection into the installed app).
+- Removed `build/package.js` (Windows-only portable builder) and its dependencies.
+- **Independent review (second pass) – fixed:** a merge could leave two computers different for good after a song was changed back and an old file was merged (history is now checked before content; regression test added); the RPM update now copies the file into a root-only folder and checks its SHA-256 as root before installing (nothing can swap it while the password is typed); a damaged song-book file is restored from its `.bak` or set aside and reported (it used to vanish and its `.bak` could be overwritten); files are written with a random temporary name, created exclusively and flushed to disk; read-only mode is respected by sync, merge and edits; computers are told apart by the operating system's machine id (two PCs called "fedora", or a copied data folder, get their own ids); deleting a song that a sync had changed meanwhile keeps the newer version as a copy; one damaged service-list entry can no longer stop the program from starting, and each part of the window starts on its own; list files are checked item by item and media in them must be local files (a `file://server/…` link could leak Windows credentials); songs carried in a list file can't overwrite local songs; yt-dlp ignores outside config files; gzip size limits; macOS update script can't delete the working app; install script runs only once fully downloaded and escapes the menu entry.
+- Known, not fixed (design): updates are as trustworthy as the GitHub account – anyone who can push a tag can publish an update (signing releases with an offline key would close this); the macOS ffmpeg download (evermeet.cx) has no checksum to check; the yt-dlp/FFmpeg checksums come from the same server as the files (they catch damage, not a hacked server); on Ubuntu 24.04+ the `.tar.gz` runs without the Chromium sandbox (AppArmor blocks user namespaces; the `.rpm`/Fedora are not affected).
+- No malware indicators found: no hidden network calls, no eval/obfuscated code, no git hooks; the program has no runtime npm dependencies. (The third-party folders Holyrics/, SoftProjector/ and the APK are not part of Scriptorium and were not scanned – no virus scanner on this PC.)
+
 ## Not done / limits
-- Not tested by hand: real projector hardware, the Windows file dialogs, an ffmpeg download (the code is written, but only the yt-dlp download was tested), MP3 conversion, and video downloads.
-- macOS builds must be made on a Mac. On Linux, AppImage/.deb must be built on Linux; the tar.gz made here works but has to be started once to create its menu entry.
+- Not tested by hand: real projector hardware, the Windows/macOS file dialogs, MP3 conversion and video downloads.
+- Tested on Fedora 44 only (headless and as an installed program). The Windows installer and the macOS DMG are built by GitHub Actions; their *update* steps (silent NSIS install, .app swap) and the RPM update (pkexec) could not be run here.
+- macOS: not notarized (needs a paid Apple Developer ID), so the first launch needs *Open Anyway*. ffmpeg from evermeet.cx is an Intel build (runs through Rosetta on Apple Silicon); ffmpeg from Homebrew is used instead if installed.
+- Windows: the installer isn't code-signed, so SmartScreen may warn "unknown publisher" the first time (More info → Run anyway).
 - Bible "smart" search is keyword + typo correction + a topic list, not a language model.
-- The installer is not code-signed, so Windows SmartScreen may warn "unknown publisher" the first time (More info → Run anyway).
+- Song merging works per song: if the same song is changed on both computers, both versions are kept (one in the conflicts book) – it does not combine two edits of the same song line by line.

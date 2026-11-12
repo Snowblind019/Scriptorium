@@ -4,6 +4,8 @@
 const Service = {
   sel: -1,
   init() {
+    // drop entries this program can't show (e.g. damaged lists saved by an older version)
+    App.settings.serviceList = (Array.isArray(App.settings.serviceList) ? App.settings.serviceList : []).filter(it => this.valid(it));
     $('#svUp').onclick = () => this.move(-1);
     $('#svDown').onclick = () => this.move(1);
     $('#svRemove').onclick = () => this.remove();
@@ -21,6 +23,13 @@ const Service = {
     this.render();
   },
   list() { return App.settings.serviceList; },
+  valid(it) {
+    if (!it || typeof it !== 'object') return false;
+    if (it.type === 'song') return typeof it.title === 'string' || !!(it.song && typeof it.song === 'object');
+    if (it.type === 'bible') return !!(it.ref && Number.isInteger(it.ref.book) && Number.isInteger(it.ref.chapter) && Number.isInteger(it.ref.from) && Number.isInteger(it.ref.to));
+    if (it.type === 'media') return !!(it.item && typeof it.item.url === 'string' && /^file:\/\/\//i.test(it.item.url));
+    return false;
+  },
   meta() { return (App.settings.serviceMeta = App.settings.serviceMeta || { name: '', dirty: false }); },
   changed() { this.meta().dirty = true; App.save(); this.render(); },
 
@@ -34,15 +43,15 @@ const Service = {
       const b = Songs.books.find(b => b.id === it.bookId);
       return `${b ? (b.short || b.name) : (it.bookShort || it.bookName || '?')} ${it.number} – ${it.title}`;
     }
-    if (it.type === 'bible') return it.label;
-    if (it.type === 'media') return it.item.name;
+    if (it.type === 'bible') return String(it.label || '');
+    if (it.type === 'media') return String((it.item && it.item.name) || '');
     return '?';
   },
   // the song in this program, or (for lists from another computer) the text that came in the file
   resolve(it) {
     let x = Songs.find(it.bookId, it.number, it.title);
     if (!x && it.title) { const ft = fold(it.title); x = Songs.all.find(y => fold(y.song.title) === ft); }
-    if (!x && it.song) x = { book: { id: it.bookId || 'list', name: it.bookName || t('From the list file'), short: it.bookShort || '' }, song: it.song, embedded: true };
+    if (!x && it.song) { const { uid, rev, ...song } = it.song; x = { book: { id: it.bookId || 'list', name: it.bookName || t('From the list file'), short: it.bookShort || '' }, song, embedded: true }; }
     return x;
   },
   render() {
@@ -99,7 +108,7 @@ const Service = {
     };
   },
   load(o) {
-    App.settings.serviceList = (o.items || []).map(it => ({ ...it }));
+    App.settings.serviceList = (o.items || []).filter(it => this.valid(it)).map(it => ({ ...it }));
     Object.assign(this.meta(), { name: o.name || '', dirty: false });
     this.sel = -1; App.save(); this.render();
     Layout.show('service');

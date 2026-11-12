@@ -28,7 +28,7 @@
       section: { type: 'fadeThrough', dur: 0.6 },
     },
     overlays: {
-      clock: { on: false, pos: 'top-right', size: 46, color: '#ffffff', opacity: 0.9 },
+      clock: { on: false, pos: 'top-right', size: 46, color: '#ffffff', opacity: 0.9, format: '24' },
       key: { on: false, pos: 'top-left', size: 40, color: '#ffd479', opacity: 0.9, prefix: '♪ ' },
       page: { on: false, pos: 'bottom-right', size: 34, color: '#ffffff', opacity: 0.75, style: 'fraction' },
     },
@@ -36,7 +36,14 @@
     bibleSep: { design: 'line', width: 70, height: 24, thickness: 3, spacing: 18, gap: 20, color: '#ffffff', color2: '#ffffff', opacity: 0.55, glow: 0, anim: 'none' },
   };
 
-  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // 24-hour "13:05" or 12-hour "1:05 PM" (seconds for the operator's clock)
+  function clockText(d, format, seconds) {
+    const p = n => String(n).padStart(2, '0'), h = d.getHours(), ss = seconds ? ':' + p(d.getSeconds()) : '';
+    return format === '12' ? `${h % 12 || 12}:${p(d.getMinutes())}${ss} ${h < 12 ? 'AM' : 'PM'}` : `${p(h)}:${p(d.getMinutes())}${ss}`;
+  }
+  // a file/web address inside style="…url('…')": no quotes, brackets or line breaks can get out
+  const cssUrl = u => String(u ?? '').replace(/["'()\\\s<>&]/g, c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'));
   function merge(a, b) {
     const o = Array.isArray(a) ? a.slice() : { ...a };
     for (const k in b) {
@@ -358,7 +365,7 @@
       else if (bg.type === 'gradient') el.style.background = `linear-gradient(${bg.angle || 135}deg, ${bg.color}, ${bg.color2})`;
       else if (bg.type === 'image' && bg.image) {
         el.style.background = this.theme.bg.color || '#000';
-        el.innerHTML = `<div class="sr-bgmedia" style="background:url('${String(bg.image).replace(/'/g, '%27')}') center / ${bg.fit || 'cover'} no-repeat"></div>`;
+        el.innerHTML = `<div class="sr-bgmedia" style="background:url('${cssUrl(bg.image)}') center / ${bg.fit === 'contain' ? 'contain' : 'cover'} no-repeat"></div>`;
       } else if (bg.type === 'video' && bg.video) {
         el.style.background = this.theme.bg.color || '#000';
         const v = document.createElement('video');
@@ -421,7 +428,7 @@
         const sep = `<div class="sr-sepwrap" style="margin:${ui.bibleSep.spacing}px 0">${dividerSvg(ui.bibleSep, 's')}</div>`;
         return c.blocks.map(b => `<div class="sr-block sr-bible" data-scale="${(b.ver === 'BSB' ? t.bsbScale : b.ver === 'VDC' ? t.vdcScale : 100) / 100}"><div class="sr-body${b.ver === 'BSB' && t.bsbItalic ? ' it' : ''}">${lines(b.text)}</div><div class="sr-refline" style="font-size:${t.refSize}px">${esc(b.ref)}</div></div>`).join(sep);
       }
-      if (c.kind === 'image') return `<div class="sr-image" style="background-image:url('${String(c.url).replace(/'/g, '%27')}')"></div>`;
+      if (c.kind === 'image') return `<div class="sr-image" style="background-image:url('${cssUrl(c.url)}')"></div>`;
       if (c.kind === 'text') return `<div class="sr-block"><div class="sr-body">${lines(c.text)}</div></div>`;
       return '';
     }
@@ -444,7 +451,7 @@
       fits(best);
     }
 
-    // ---------- overlays: clock (24 h), key/chord, page n/N ----------
+    // ---------- overlays: clock (24 h or 12 h AM/PM), key/chord, page n/N ----------
     tickOverlays() {
       const o = this.ui.overlays, on = this.ovState || {}, m = this.meta;
       const set = (name, text) => {
@@ -457,7 +464,7 @@
         if (el.textContent !== text) el.textContent = text;
       };
       const d = new Date();
-      set('clock', String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'));
+      set('clock', clockText(d, o.clock && o.clock.format));
       set('key', m && m.kind === 'song' && m.key ? (o.key.prefix || '') + m.key : '');
       let pg = '';
       if (m && m.kind === 'song' && m.page) {
@@ -505,5 +512,5 @@
     }
   }
 
-  window.ScripRender = { Stage, DEFAULT_THEME, DEFAULT_UI, merge, dividerSvg, DIVIDERS, ANIMS };
+  window.ScripRender = { Stage, DEFAULT_THEME, DEFAULT_UI, merge, dividerSvg, DIVIDERS, ANIMS, clockText, cssUrl, esc };
 })();

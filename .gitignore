@@ -4,15 +4,21 @@ SoftProjector/
 database/
 *.apk
 
-# Installed packages (recreate with: cd app && npm install)
+# Installed packages (recreate with: cd app && npm ci)
 app/node_modules/
 
-# Build output – only the finished installers are kept in the repo (each under GitHub's 100 MB limit)
-dist/*
-!dist/Scriptorium-Setup-*.exe
-!dist/Scriptorium-*-linux-x64.tar.xz
+# Build output – installers are published as GitHub releases (see .github/workflows/release.yml), not kept in git
+dist/
 
 # Download caches of the data scripts in tools/
 tools/_work/
 __pycache__/
 *.pyc
+
+# editor / OS clutter
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Claude Code local files
+.claude/

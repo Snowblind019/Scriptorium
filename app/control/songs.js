@@ -155,6 +155,7 @@ const Importers = {
   },
   json(text) {
     const d = JSON.parse(text);
+    if (d && d.format === 'scriptorium-songs') throw new Error(t('This is a whole song database – use Settings › Song sync & backups › Merge songs from a file'));
     const songs = Array.isArray(d) ? d : d.songs;
     return songs.map(s => this.fromRecord(s));
   },
@@ -207,8 +208,34 @@ const Songs = {
     $('#bkFolder').onclick = () => api.openSongFolder();
     App.nav.songs = { next: () => this.step(1), prev: () => this.step(-1), selStep: d => this.selStep(d), show: () => this.showSlide(this.selIdx >= 0 ? this.selIdx : 0) };
     document.addEventListener('live-changed', () => this.markLive());
+    // songs merged from another computer (sync folder) → reload, keep what is open
+    api.onSongsChanged(async info => { await this.reload(); App.mergeReport(info && info.merged); });
     this.search();
   },
+
+  // load the books again from the database (after a merge, sync or restore)
+  async reload() {
+    if (!$('#modal').classList.contains('hidden')) { this.pendingReload = true; return; }   // the editor is open → after it closes
+    this.pendingReload = false;
+    const curUid = this.current && this.current.song.uid, src = App.live.source;
+    this.books = (await api.loadSongs()).sort((a, b) => this.bookOrder(a) - this.bookOrder(b));
+    this.reindex(); this.fillBookSelect(); this.search();
+    const byUid = new Map(this.all.map(x => [x.song.uid, x]));
+    if (src && src.song && byUid.has(src.song.uid)) src.song = byUid.get(src.song.uid).song;   // the song on screen stays marked as live
+    if (curUid && byUid.has(curUid)) this.open(byUid.get(curUid), true);
+    else if (curUid) { this.current = null; $('#slides').innerHTML = ''; $('#songTitle').textContent = t('Select a song'); $('#songMeta').textContent = ''; }
+    if (!$('#booksModal').classList.contains('hidden')) this.renderBooks();
+    Service.render();
+  },
+  // send changes to the song database; new songs get their id back
+  async commit(ops, objs = []) {
+    let r;
+    try { r = await api.songsApply(ops); }
+    catch (e) { toast(t('Could not save') + ': ' + String(e.message || e).replace(/^Error invoking remote method '[^']+': (Error: )?/, ''), 7000); return null; }
+    objs.forEach((o, i) => { const x = r.songs[i]; if (o && x) { o.uid = x.uid; o.rev = x.rev; } });
+    return r;
+  },
+  payload(song, bookId) { const o = { ...song, book: bookId }; delete o.edited; return o; },
 
   settings() { return App.settings.songs; },
   bookOrder(b) {
@@ -217,7 +244,7 @@ const Songs = {
   },
   fillBookSelect() {
     const sel = $('#songBook'), v = sel.value;
-    sel.innerHTML = `<option value="">${t('All song books')} (${this.all.length})</option>` + this.books.map(b => `<option value="${b.id}">${esc(b.name)} (${b.songs.length})</option>`).join('');
+    sel.innerHTML = `<option value="">${t('All song books')} (${this.all.length})</option>` + this.books.map(b => `<option value="${esc(b.id)}">${esc(b.name)} (${b.songs.length})</option>`).join('');
     sel.value = this.books.some(b => b.id === v) ? v : '';
   },
   reindex() {
@@ -251,7 +278,7 @@ const Songs = {
     $('#songHint').textContent = (hint ? hint + ' · ' : '') + res.length + ' ' + t(res.length === 1 ? 'song' : 'songs');
     const multi = !bookId;
     $('#songList').innerHTML = res.slice(0, 600).map((x, i) =>
-      `<div class="item${this.current && this.current.song === x.song ? ' sel' : ''}" tabindex="0" data-i="${i}"><span class="num">${x.song.number}</span><span class="ttl">${esc(x.song.title)}</span>${multi ? `<span class="tag">${esc(x.book.short || x.book.name)}</span>` : ''}<span class="act"><button data-a="svc" title="${t('Add to service list')}">${icon('addList')}</button></span></div>`
+      `<div class="item${this.current && this.current.song === x.song ? ' sel' : ''}" tabindex="0" data-i="${i}"><span class="num">${esc(x.song.number)}</span><span class="ttl">${esc(x.song.title)}</span>${multi ? `<span class="tag">${esc(x.book.short || x.book.name)}</span>` : ''}<span class="act"><button data-a="svc" title="${t('Add to service list')}">${icon('addList')}</button></span></div>`
     ).join('') + (res.length > 600 ? `<div class="empty">… ${res.length - 600} ${t('more – refine the search')}</div>` : '');
     $$('#songList .item[data-i]').forEach(el => {
       const x = this.results[+el.dataset.i];
@@ -371,7 +398,7 @@ const Songs = {
   edit(x) {
     this.editing = x;
     $('#edTitle').textContent = t(x ? 'Edit song' : 'New song');
-    $('#edBook').innerHTML = this.books.map(b => `<option value="${b.id}">${esc(b.name)}</option>`).join('');
+    $('#edBook').innerHTML = this.books.map(b => `<option value="${esc(b.id)}">${esc(b.name)}</option>`).join('');
     const book = x ? x.book : (this.books.find(b => b.id === $('#songBook').value) || this.books[0]);
     $('#edBook').value = book.id;
     $('#edNumber').value = x ? x.song.number : Math.max(0, ...book.songs.map(s => +s.number || 0)) + 1;
@@ -380,41 +407,50 @@ const Songs = {
     $('#edInfo').value = x ? (x.song.info || '') : '';
     $('#edText').value = x ? SongFormat.toMarkup(x.song.sections || []) : '';
     $('#edDetect').textContent = '';
-    $('#edDelete').classList.toggle('hidden', !x);
+    $('#edDelete').classList.toggle('hidden', !x || !!x.embedded);   // a song shown from a list file isn't in a book here
     $('#modal').classList.remove('hidden');
     (x ? $('#edName') : $('#edText')).focus();
   },
-  closeEditor() { $('#modal').classList.add('hidden'); },
-  async saveBook(book) { book.edited = true; await api.saveSongBook(book); },
-  async saveEditor() {
+  closeEditor() { $('#modal').classList.add('hidden'); if (this.pendingReload) this.reload(); },
+  // the song being edited, as it is now (a sync may have reloaded the books while the editor was open)
+  editingNow() {
     const x = this.editing;
+    if (!x || !x.song.uid) return x;
+    return this.all.find(y => y.song.uid === x.song.uid) || x;
+  },
+  async saveEditor() {
+    const x = this.editingNow();
     const sections = SongFormat.fromMarkup($('#edText').value);
     const title = $('#edName').value.trim() || (sections[0] ? sections[0].text.split('\n')[0] : '');
     if (!title) { toast(t('Title is required')); return; }
     const book = this.books.find(b => b.id === $('#edBook').value);
+    if (!book) { toast(t('Choose a song book')); return; }
+    const next = Object.assign({}, x ? x.song : {}, { number: parseInt($('#edNumber').value, 10) || 0, title, sections });
+    if (x && this.editing && x.song !== this.editing.song) next.rev = this.editing.song.rev;   // the version that was opened in the editor
+    for (const k of ['key', 'info']) { const v = $('#ed' + k[0].toUpperCase() + k.slice(1)).value.trim(); if (v) next[k] = v; else delete next[k]; }
+    const r = await this.commit({ songs: [this.payload(next, book.id)] }, [next]);
+    if (!r || !r.songs[0]) return;
     const song = x ? x.song : {};
-    Object.assign(song, { number: parseInt($('#edNumber').value, 10) || 0, title, sections });
-    for (const k of ['key', 'info']) { const v = $('#ed' + k[0].toUpperCase() + k.slice(1)).value.trim(); if (v) song[k] = v; else delete song[k]; }
-    const changed = new Set([book]);
-    if (x && x.book !== book) { x.book.songs.splice(x.book.songs.indexOf(song), 1); changed.add(x.book); }
+    for (const k of ['key', 'info']) if (!next[k]) delete song[k];
+    Object.assign(song, next);
+    if (x && x.book !== book && Array.isArray(x.book.songs)) { const i = x.book.songs.indexOf(song); if (i >= 0) x.book.songs.splice(i, 1); }
     if (!x || x.book !== book) book.songs.push(song);
     book.songs.sort((a, b) => a.number - b.number);
-    for (const b of changed) await this.saveBook(b);
-    this.afterBooksChanged();
     this.closeEditor();
+    this.afterBooksChanged();
     const nx = this.all.find(y => y.song === song);
     if (nx) this.open(nx, true);
     toast(t('Song saved'));
   },
   async deleteCurrent() {
-    const x = this.editing;
-    if (!x || !confirm(t('Delete this song?') + `\n${x.song.title} (${x.book.name})`)) return;
-    x.book.songs.splice(x.book.songs.indexOf(x.song), 1);
-    await this.saveBook(x.book);
+    const x = this.editingNow();
+    if (!x || !x.song.uid || !confirm(t('Delete this song?') + `\n${x.song.title} (${x.book.name})`)) return;
+    if (!await this.commit({ remove: [{ uid: x.song.uid, rev: (this.editing && this.editing.song.rev) || x.song.rev }] })) return;
+    const i = x.book.songs.indexOf(x.song); if (i >= 0) x.book.songs.splice(i, 1);
     this.closeEditor();
     this.current = null; $('#slides').innerHTML = ''; $('#songTitle').textContent = t('Select a song'); $('#songMeta').textContent = '';
     this.afterBooksChanged();
-    toast(t('Song deleted (a .bak copy of the book was kept)'));
+    toast(t('Song deleted (it can be brought back from a backup in Settings › Song sync & backups)'), 4000);
   },
   afterBooksChanged() { this.reindex(); this.fillBookSelect(); this.search(); },
 
@@ -424,26 +460,37 @@ const Songs = {
     $('#booksTable').innerHTML = `<div class="brow headr"><span>${t('Name')}</span><span>${t('Short name')}</span><span>${t('Songs')}</span><span></span><span></span></div>` +
       this.books.map((b, i) => `<div class="brow" data-i="${i}"><input data-f="name" value="${esc(b.name)}"><input data-f="short" value="${esc(b.short || '')}"><span>${b.songs.length}</span>
         <span class="row gap"><button class="btn sm ghost" data-a="csv">CSV</button><button class="btn sm ghost" data-a="json">JSON</button></span><button class="btn sm ghost danger" data-a="del">${t('Delete')}</button></div>`).join('') +
-      `<div class="brow"><span class="muted small">${t('Import into')}</span><select id="bkTarget"><option value="">${t('A new book (named after the file)')}</option>${this.books.map(b => `<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select><span></span><span></span><span></span></div>`;
+      `<div class="brow"><span class="muted small">${t('Import into')}</span><select id="bkTarget"><option value="">${t('A new book (named after the file)')}</option>${this.books.map(b => `<option value="${esc(b.id)}">${esc(b.name)}</option>`).join('')}</select><span></span><span></span><span></span></div>`;
     $$('#booksTable .brow[data-i]').forEach(row => {
       const b = this.books[+row.dataset.i];
-      $$('input', row).forEach(inp => inp.onchange = async () => { b[inp.dataset.f] = inp.value.trim() || b[inp.dataset.f]; await this.saveBook(b); this.afterBooksChanged(); });
+      $$('input', row).forEach(inp => inp.onchange = async () => {
+        const v = inp.value.trim() || b[inp.dataset.f];
+        if (!await this.commit({ books: [{ id: b.id, name: b.name, short: b.short, description: b.description, [inp.dataset.f]: v }] })) { inp.value = b[inp.dataset.f] || ''; return; }
+        b[inp.dataset.f] = v; this.afterBooksChanged();
+      });
       $('[data-a="csv"]', row).onclick = () => this.exportBook(b, 'csv');
       $('[data-a="json"]', row).onclick = () => this.exportBook(b, 'json');
       $('[data-a="del"]', row).onclick = async () => {
         if (!confirm(t('Delete this song book?') + `\n${b.name} (${b.songs.length})`)) return;
-        await api.deleteSongBook(b.id);
+        if (!await this.commit({ removeBooks: [b.id] })) return;
         this.books.splice(this.books.indexOf(b), 1);
         this.afterBooksChanged(); this.renderBooks();
       };
     });
   },
-  slug(name) { let id = fold(name).replace(/ /g, '-') || 'carte'; while (this.books.some(b => b.id === id)) id += '-' + uid().slice(0, 3); return id; },
+  // book ids are file names: plain letters, digits and dashes
+  slug(name) {
+    let id = fold(name).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'carte-' + uid().slice(0, 4);
+    if (id === 'merge-conflicts') id += '-1';
+    while (this.books.some(b => b.id === id)) id += '-' + uid().slice(0, 3);
+    return id;
+  },
   async newBook() {
     const name = await App.ask(t('Name of the new song book:'), t('New book'));
     if (!name) return;
-    const b = { id: this.slug(name), name, short: name.slice(0, 10), songs: [], edited: true };
-    this.books.push(b); await this.saveBook(b); this.afterBooksChanged(); this.renderBooks();
+    const b = { id: this.slug(name), name, short: name.slice(0, 10), songs: [] };
+    if (!await this.commit({ books: [{ id: b.id, name: b.name, short: b.short }] })) return;
+    this.books.push(b); this.afterBooksChanged(); this.renderBooks();
   },
   parseSps(text) {
     const secs = []; let cur = null;
@@ -476,13 +523,17 @@ const Songs = {
         else if (['cho', 'chordpro', 'pro', 'crd'].includes(f.ext)) songs = Importers.chordpro(f.text);
         else songs = Importers.txt(f.text);
       } catch (e) { toast(`${f.name}: ${e.message}`); continue; }
-      let book = target;
-      if (!book) { book = { id: this.slug(f.title || f.name), name: f.title || f.name.replace(/\.[^.]+$/, ''), short: (f.title || f.name).slice(0, 10), songs: [], edited: true }; this.books.push(book); }
+      let book = target, isNew = false;
+      if (!book) { book = { id: this.slug(f.title || f.name), name: f.title || f.name.replace(/\.[^.]+$/, ''), short: (f.title || f.name).slice(0, 10), songs: [] }; isNew = true; }
       let n = Math.max(0, ...book.songs.map(s => +s.number || 0));
-      for (const s of songs) { if (!s.number || book.songs.some(x => x.number === s.number)) s.number = ++n; book.songs.push(s); }
+      const taken = new Set(book.songs.map(s => s.number));
+      for (const s of songs) { if (!s.number || taken.has(s.number)) s.number = ++n; taken.add(s.number); }
+      const r = await this.commit({ books: isNew ? [{ id: book.id, name: book.name, short: book.short }] : [], songs: songs.map(s => this.payload(s, book.id)) }, songs);
+      if (!r) break;
+      if (isNew) this.books.push(book);
+      book.songs.push(...songs.filter(s => s.uid));
       book.songs.sort((a, b) => a.number - b.number);
-      await this.saveBook(book);
-      total += songs.length;
+      total += songs.filter(s => s.uid).length;
     }
     if (files.length) { this.afterBooksChanged(); this.renderBooks(); toast(`${t('Imported')} ${total} ${t('songs')}`); }
   },

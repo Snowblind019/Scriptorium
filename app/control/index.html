@@ -232,6 +232,34 @@
     <div class="row gap end"><div class="spacer"></div><button id="askCancel" class="btn ghost" data-i18n="Cancel">Cancel</button><button id="askOk" class="btn" data-i18n="OK">OK</button></div>
   </div>
 </div>
+<!-- update available -->
+<div id="updModal" class="modal hidden">
+  <div class="dialog">
+    <div id="updTitle" class="h1"></div>
+    <div id="updSub" class="muted small"></div>
+    <div class="muted small" data-i18n="What's new:">What's new:</div>
+    <div id="updNotes" class="upd-notes"></div>
+    <div id="updProg" class="progress hidden"><div id="updBar"></div></div>
+    <div id="updStatus" class="muted small"></div>
+    <div class="row gap end">
+      <button id="updSkip" class="btn sm ghost" data-i18n="Skip this version">Skip this version</button>
+      <button id="updPage" class="btn sm ghost" data-i18n="Download page">Download page</button>
+      <div class="spacer"></div>
+      <button id="updLater" class="btn ghost" data-i18n="Later">Later</button>
+      <button id="updGo" class="btn" data-i18n="Update now">Update now</button>
+    </div>
+  </div>
+</div>
+
+<!-- songs merged (conflicts) -->
+<div id="mergeModal" class="modal hidden">
+  <div class="dialog">
+    <div id="mergeTitle" class="h1"></div>
+    <div id="mergeText"></div>
+    <div id="mergeList" class="list merge-list"></div>
+    <div class="row gap end"><div class="spacer"></div><button id="mergeOk" class="btn" data-i18n="OK">OK</button></div>
+  </div>
+</div>
 <div id="toast" class="toast"></div>
 
 <script src="../shared/render.js"></script>

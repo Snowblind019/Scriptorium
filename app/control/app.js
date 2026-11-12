@@ -67,6 +67,7 @@ const App = {
       layout: { views: {}, snap: true, zoneSet: 'holyrics', customZones: {}, saved: {}, active: {} },
       downloads: { kind: 'audio', aformat: 'mp3', aquality: '192', rate: '', vformat: 'mp4', vres: '1080' },
       projectorDisplayId: null, projectorOnStartup: false,
+      update: { auto: true, skip: '' }, songSync: { folder: '' },
     };
   },
 
@@ -121,8 +122,9 @@ const App = {
     this.pushState();
 
     $$('#viewTabs button').forEach(b => b.onclick = () => this.setView(b.dataset.view));
-    const tick = () => { const d = new Date(); $('#clock').textContent = [d.getHours(), d.getMinutes(), d.getSeconds()].map(n => String(n).padStart(2, '0')).join(':'); };
+    const tick = () => { $('#clock').textContent = ScripRender.clockText(new Date(), this.settings.ui.overlays.clock.format, true); };
     tick(); setInterval(tick, 1000);
+    this.initUpdates();
 
     $('#btnOutput').onclick = () => this.setOutput(!this.outputOn);
     api.onProjectorVisible(v => this.outputChanged(v));
@@ -135,6 +137,7 @@ const App = {
     $('#askOk').onclick = () => this._askDone(true);
     $('#askCancel').onclick = () => this._askDone(false);
     $('#askInput').addEventListener('keydown', e => { if (e.key === 'Enter') this._askDone(true); if (e.key === 'Escape') this._askDone(false); });
+    $('#mergeOk').onclick = () => $('#mergeModal').classList.add('hidden');
     this.renderStrip();
 
     document.addEventListener('keydown', e => this.onKey(e), true);
@@ -201,7 +204,7 @@ const App = {
   renderStrip() {
     this.stripStages.forEach(s => s.destroy());
     $('#themeStrip').innerHTML = this.settings.themes.map(th =>
-      `<div><div class="thumb${th.id === this.settings.activeTheme ? ' on' : ''}" data-id="${th.id}" title="${esc(th.name)}"><div class="th-stage"></div></div><div class="thumb-name">${esc(th.name)}</div></div>`).join('');
+      `<div><div class="thumb${th.id === this.settings.activeTheme ? ' on' : ''}" data-id="${esc(th.id)}" title="${esc(th.name)}"><div class="th-stage"></div></div><div class="thumb-name">${esc(th.name)}</div></div>`).join('');
     this.stripStages = $$('#themeStrip .thumb').map(el => {
       const th = this.settings.themes.find(x => x.id === el.dataset.id);
       const st = new ScripRender.Stage(el.querySelector('.th-stage'), { aspect: 16 / 9, mutedMedia: true, static: true });
@@ -324,7 +327,7 @@ const App = {
   },
   onKey(e) {
     if (Settings.capturing) return;
-    const modal = !$('#modal').classList.contains('hidden') || !$('#booksModal').classList.contains('hidden') || !$('#askModal').classList.contains('hidden');
+    const modal = ['#modal', '#booksModal', '#askModal', '#updModal', '#mergeModal'].some(m => !$(m).classList.contains('hidden'));
     if (modal) return;
     const tag = (e.target.tagName || '').toLowerCase();
     const typing = (tag === 'input' && !['checkbox', 'range', 'color', 'radio'].includes(e.target.type)) || tag === 'textarea' || tag === 'select';
@@ -367,14 +370,78 @@ const App = {
       case 'newSong': Songs.edit(null); break;
     }
   },
+
+  // ---------- song merges (update, sync folder, file) ----------
+  // a short note for simple merges; a window listing the songs that were changed on two computers
+  mergeReport(list, title) {
+    list = (list || []).filter(Boolean);
+    if (!list.length) return;
+    const tot = k => list.reduce((n, m) => n + (Array.isArray(m[k]) ? m[k].length : +m[k] || 0), 0);
+    const parts = [[tot('added'), 'new'], [tot('updated'), 'changed'], [tot('deleted'), 'deleted'], [tot('restored'), 'brought back']].filter(([n]) => n).map(([n, w]) => `${n} ${t(w)}`);
+    const from = [...new Set(list.map(m => m.source).filter(Boolean))].join(', ');
+    const conflicts = list.flatMap(m => m.conflicts || []);
+    const text = (title || t('Songs merged')) + (from ? ` (${from})` : '') + ': ' + (parts.join(', ') || t('no changes'));
+    if (!conflicts.length) { toast(text, 5000); return; }
+    $('#mergeTitle').textContent = title || t('Songs merged');
+    $('#mergeText').innerHTML = `${esc(text)}<div class="muted small" style="margin-top:8px">${esc(t('These songs were changed on both computers. The newer version was kept; the other one is in the song book “Conflicte la îmbinare / Merge conflicts”. Compare them and delete the copy you don’t need.'))}</div>`;
+    const bookName = id => { const b = Songs.books.find(x => x.id === id); return b ? b.short || b.name : id; };
+    $('#mergeList').innerHTML = conflicts.slice(0, 200).map(c => `<div class="item"><span class="num">${esc(c.number)}</span><span class="ttl">${esc(c.title)}${c.otherTitle && c.otherTitle !== c.title ? ` <span class="muted">/ ${esc(c.otherTitle)}</span>` : ''}</span><span class="tag">${esc(bookName(c.book))}</span></div>`).join('');
+    $('#mergeModal').classList.remove('hidden');
+  },
+
+  // ---------- updates (GitHub releases) ----------
+  initUpdates() {
+    api.onUpdateAvailable(info => this.showUpdate(info));
+    api.onUpdateProgress(p => {
+      $('#updBar').style.width = (p.pct || 0).toFixed(1) + '%';
+      $('#updStatus').textContent = t('Downloading') + '… ' + (p.total ? `${(p.got / 1048576).toFixed(1)} / ${(p.total / 1048576).toFixed(1)} MB` : '');
+    });
+    $('#updLater').onclick = () => $('#updModal').classList.add('hidden');
+    $('#updSkip').onclick = () => { this.settings.update.skip = this.update && this.update.version; this.save(); $('#updModal').classList.add('hidden'); };
+    $('#updGo').onclick = () => this.runUpdate();
+    $('#updPage').onclick = () => api.updateOpenPage();
+  },
+  showUpdate(info) {
+    this.update = info;
+    $('#updTitle').textContent = `${t('A new version of Scriptorium is available')}: ${info.version}`;
+    $('#updSub').textContent = `${t('You have')} ${info.current}` + (info.date ? ` · ${t('released')} ${new Date(info.date).toLocaleDateString()}` : '') + (info.size ? ` · ${(info.size / 1048576).toFixed(0)} MB` : '');
+    $('#updNotes').textContent = info.notes || '';
+    $('#updNotes').classList.toggle('hidden', !info.notes);
+    $('#updProg').classList.add('hidden'); $('#updBar').style.width = '0%';
+    $('#updStatus').textContent = info.canInstall ? t('Your songs are backed up first and merged with the songs in the new version – nothing is lost.') : t('This copy can’t update itself – open the download page and install the new version.');
+    $('#updGo').classList.toggle('hidden', !info.canInstall);
+    for (const b of ['#updGo', '#updLater', '#updSkip']) $(b).disabled = false;
+    $('#updModal').classList.remove('hidden');
+  },
+  async runUpdate() {
+    for (const b of ['#updGo', '#updLater', '#updSkip']) $(b).disabled = true;
+    $('#updProg').classList.remove('hidden');
+    try {
+      await api.updateDownload();
+      $('#updStatus').textContent = t('Installing – Scriptorium restarts by itself…');
+      await api.saveSettings(this.settings);
+      const r = await api.updateInstall();
+      if (r && r.manual) $('#updStatus').textContent = t('The download page was opened.');
+    } catch (e) {
+      $('#updStatus').textContent = t('Update failed') + ': ' + String(e.message || e).replace(/^Error invoking remote method '[^']+': (Error: )?/, '');
+      for (const b of ['#updGo', '#updLater', '#updSkip']) $(b).disabled = false;
+    }
+  },
 };
 
 window.addEventListener('DOMContentLoaded', async () => {
   await App.init();
-  await Songs.init();
-  Service.init();
-  await Bible.init();
-  Player.init();
-  Settings.init();
+  // each part starts on its own: a problem in one (e.g. a damaged list) must not stop the others
+  for (const [name, fn] of [['songs', () => Songs.init()], ['service', () => Service.init()], ['bible', () => Bible.init()], ['media', () => Player.init()], ['settings', () => Settings.init()]]) {
+    try { await fn(); } catch (e) { console.error('init ' + name, e); toast(`${t('Problem starting')}: ${name} – ${e.message}`, 8000); }
+  }
   App.setView(App.settings.startView === 'bible' ? 'bible' : 'songs');
+  // what happened to the song database while starting (songs that came with an update, problems)
+  const rep = await api.songsStartupReport();
+  if (rep && rep.error) { $('#mergeTitle').textContent = t('The song database could not be opened'); $('#mergeText').textContent = rep.error; $('#mergeList').textContent = t('Nothing is changed until this is fixed. Your song files are in Settings › Song sync & backups › Open songs folder.'); $('#mergeModal').classList.remove('hidden'); }
+  else if (rep && rep.bundled) App.mergeReport([{ ...rep.bundled, source: '' }], t('Songs updated with the new version'));
+  if (rep && rep.damaged && rep.damaged.length) {
+    const lost = rep.damaged.filter(d => !d.recovered).map(d => d.file);
+    toast(t('A damaged song file was found') + ': ' + rep.damaged.map(d => d.file).join(', ') + ' – ' + (lost.length ? t('it was set aside; restore the songs from a backup or sync (Settings › Song sync & backups)') : t('it was restored from its .bak copy')), 12000);
+  }
 });

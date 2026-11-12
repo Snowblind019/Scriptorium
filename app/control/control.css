@@ -308,3 +308,12 @@ input[type=range] { accent-color: var(--accent); }
 .bookgrid.flat .bk .nm { font-size: .62em; margin-top: .15em; }
 .bookgrid.flat .bk .cc { font-size: .55em; right: .45em; top: .3em; }
 .bookgrid.flat.tiny .bk .nm, .bookgrid.flat.tiny .bk .cc { display: none; }
+
+/* update + merge dialogs, song sync settings */
+.upd-notes { white-space: pre-wrap; max-height: 40vh; overflow: auto; background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 13px; user-select: text; }
+#updProg #updBar, .progress > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+.merge-list { max-height: 50vh; }
+.sync-box { display: flex; flex-direction: column; gap: 8px; }
+.sync-path { font-family: Consolas, "DejaVu Sans Mono", monospace; font-size: 12px; word-break: break-all; user-select: text; }
+.backup-row { display: flex; align-items: center; gap: 10px; padding: 4px 0; border-bottom: 1px solid var(--line); }
+.backup-row .grow { flex: 1; }
